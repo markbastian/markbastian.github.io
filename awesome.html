@@ -1,0 +1,206 @@
+<><html lang="en"><head><meta charset="utf-8" /><title>Clojure is Awesome!</title><meta content="Clojure is Awesome!" name="description" /><meta content="Mark Bastian" name="author" /><meta content="yes" name="apple-mobile-web-app-capable" /><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" /><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport" /><link href="bower_components/reveal.js/css/reveal.css" rel="stylesheet" /><link href="bower_components/reveal.js/css/theme/default.css" id="theme" rel="stylesheet" /><!-- Code syntax highlighting --><link href="bower_components/reveal.js/lib/css/zenburn.css" rel="stylesheet" /><!-- Printing and PDF exports --><script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script><!--[if lt IE 9]>
+		<script src="bower_components/html5shiv/dist/html5shiv.js"></script>
+		<![endif]--></head><body><div class="reveal"><!-- Any section element inside of this container is displayed as a slide --><div class="slides"><section><h2>Clojure is Awesome!</h2><h3>A sampling of things that make Clojure awesome</h3><p>Mark Bastian</p><p><a href="mailto:markbastian@gmail.com?Subject=Syntax">markbastian@gmail.com</a></p><p></p><p>1/16/2015</p></section><section><h2>What is Clojure?</h2><ul><li>A functional language hosted on the JVM</li><li>A practical Lisp</li></ul></section><section><section><h2>Clojure Collections Are Awesome!</h2></section><section><h2>Java Collections</h2><a><img src="./Memes/CollectionLiterals.jpg" /></a></section><section><h2>Clojure Collections Representation</h2><ul><li>Clojure collections have a very simple representation</li><li>This makes them very easy to read and work with</li></ul></section><section><h3>Clojure Collections are Java Collections</h3><pre><code class="java" contenteditable="contenteditable" data-trim="data-trim">package interop;
+
+import clojure.lang.RT;
+
+import java.util.List;
+import java.util.Map;
+import java.util.RandomAccess;
+import java.util.Set;
+
+public class Interop {
+    public static void main(String[] args){
+        Map&lt;String, Integer&gt; m = (Map&lt;String, Integer&gt;)RT.readString(&quot;{ \&quot;abc\&quot; 123 }&quot;);
+        System.out.println(m.get(&quot;abc&quot;));
+        Set&lt;String&gt; s = (Set&lt;String&gt;)RT.readString(&quot;#{ \&quot;abc\&quot; \&quot;123\&quot; }&quot;);
+        System.out.println(s.contains(&quot;abc&quot;));
+        List&lt;String&gt; v = (List&lt;String&gt;)RT.readString(&quot;[ \&quot;abc\&quot; ]&quot;);
+        System.out.println(v.get(0));
+        System.out.println(v instanceof RandomAccess);
+    }
+}</code></pre><p>Note: Read Only</p></section><section><h2>Syntax: Collection Initialization</h2><p>Java</p><pre><code class="java" contenteditable="contenteditable" data-trim="data-trim">final Set&lt;String&gt; names = new HashSet&lt;String&gt;();
+final List&lt;Integer&gt; ages = new LinkedList&lt;Integer&gt;();
+final Map&lt;String, Integer&gt; names2ages = new HashMap&lt;String, Integer&gt;();</code></pre><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(def names #{})
+(def ages [])
+(def names-&gt;ages {})</code></pre></section><section><h2>Java Collection Initialization</h2><pre><code class="java" contenteditable="contenteditable" data-trim="data-trim">final Set&lt;String&gt; names = new HashSet&lt;String&gt;();
+names.add(&quot;Curly&quot;);
+names.add(&quot;Larry&quot;);
+names.add(&quot;Moe&quot;);
+
+final List&lt;Integer&gt; ages = new LinkedList&lt;Integer&gt;();
+ages.add(20);
+ages.add(21);
+ages.add(22);
+
+final Map&lt;String, Integer&gt; names2ages = new HashMap&lt;String, Integer&gt;();
+
+//This is inefficient but preserves our list
+int i = 0;
+for(String name : names){
+    names2ages.put(name, ages.get(i));
+    i++;
+}
+
+//This is efficient since we are popping, but the list is mutated :(
+for(String name : names){
+    names2ages.put(name, ages.remove(0));
+}</code></pre></section><section><h2>Clojure Collection Initialization</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(def names #{ &quot;Curly&quot; &quot;Larry&quot; &quot;Moe&quot;})
+(def ages [20 21 22])
+(def names-&gt;ages (zipmap names ages))</code></pre><ul><li>Inlining like this is called a &quot;collection literal&quot;</li><li>Scala also has collection literals</li><li>Sorry, Java</li></ul></section><section><h2>Clojure Collections API</h2><ul><li>Clojure collections have a unified API</li><li>Common Clojure data structures are:<ul><li>Nested: It is common for collections to be collections of collections</li><li>Functions: vectors, sets, and vectors are functions</li><li>Heterogeneous: Collection elements can be of any type</li></ul></li><li>Note: Lists are different</li><ul><li>They are rarely used to represent data</li><li>They are used to represent code</li></ul></ul></section><section><h2>Unified Interface for Updates</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(conj [1 2 3] 4) ;Vector insertion
+=&gt; [1 2 3 4] ;Faster to add at the end
+
+(conj #{1 2 3} 4) ;Set insertion
+=&gt; #{1 4 3 2}
+
+(conj {&quot;ONE&quot; 1 &quot;TWO&quot; 2 &quot;THREE&quot; 3} [&quot;FOUR&quot; 4]) ;Map insertion
+=&gt; {&quot;FOUR&quot; 4, &quot;THREE&quot; 3, &quot;TWO&quot; 2, &quot;ONE&quot; 1}
+
+(conj &apos;(1 2 3) 4) ;List insertion
+=&gt; (4 1 2 3) ;Faster to add at the front</code></pre><p>One function for &quot;efficient&quot; collection addition</p></section><section><h2>Unified Interface for Gets</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(get [1 2 3 4] 2) ;Get the item at index 2
+=&gt; 3
+
+(get #{1 2 3 4} 2) ;Get 2 from the set
+=&gt; 2
+
+(get {&quot;ONE&quot; 1 &quot;TWO&quot; 2 &quot;THREE&quot; 3 &quot;FOUR&quot; 4} &quot;TWO&quot;) ;Get &quot;TWO&quot; from the map
+=&gt; 2
+
+(associative? &apos;(1 2 3 4)) ;Lists aren&apos;t associative so we can&apos;t get
+=&gt; false</code></pre><p>Same interface for any random access data structure</p></section><section><h2>Unified Interface for Failure</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(get [1 2 3 4] 5)
+=&gt; nil
+
+(get #{1 2 3 4} 5)
+=&gt; nil
+
+(get {&quot;ONE&quot; 1 &quot;TWO&quot; 2 &quot;THREE&quot; 3 &quot;FOUR&quot; 4} &quot;FIVE&quot;)
+=&gt; nil</code></pre><ul><li>If something is missing, return nil</li><li>Clojure nil is Java null</li><li>No NPEs!</li></ul></section><section><h2>Unified Interface for Defaults</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(get [1 2 3 4] 5 5)
+=&gt; 5
+
+(get #{1 2 3 4} 5 5)
+=&gt; 5
+
+(get {&quot;ONE&quot; 1 &quot;TWO&quot; 2 &quot;THREE&quot; 3 &quot;FOUR&quot; 4} &quot;FIVE&quot; 5)
+=&gt; 5</code></pre><p>Get takes an optional final argument to return when the item is missing from the collection</p></section><section><h2>Nested Heterogeneous Data</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">;Nested &amp; Heterogeneous
+(def data { :a 1 :b [1 2 3 4 5] :c { :name &quot;Bob&quot; :age 19 }})
+=&gt; #&apos;user/data
+(get-in data [:c :name]) ;I can drill down
+=&gt; &quot;Bob&quot;
+(get-in data [:foo :baz :wonk]) ;Bad paths just return nil
+=&gt; nil
+(get-in data [:c &quot;shoe size&quot;] 14) ;I can provide defaults
+=&gt; 14</code></pre><ul><li>I can flexibly define my data any way I want</li><li>Complex access is trivial using get-in</li><li>No NPEs!</li><li>I can provide defaults when data is missing</li></ul></section><section><h2>Nested Heterogeneous Data: Updating</h2><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">;Nested &amp; Heterogeneous
+(def data { :a 1 :b [1 2 3 4 5] :c { :name &quot;Bob&quot; :age 19 }})
+=&gt; #&apos;user/data
+
+(update-in data [:c :age] inc) ;Update value via a function
+=&gt; {:c {:age 20, :name &quot;Bob&quot;}, :b [1 2 3 4 5], :a 1}
+
+(assoc-in data [:c &quot;shoe size&quot;] 14) ;insert or replace
+=&gt; {:c {:age 19, :name &quot;Bob&quot;, &quot;shoe size&quot; 14}, :b [1 2 3 4 5], :a 1}</code></pre><ul><li>I can update complex data structures using a unified API</li><li>assoc = associate: Add or replace a value</li><li>update: Update a value via a function</li><li>Provided path works for any random access data structure</li></ul></section><section><h3>Nested Heterogeneous Data: Serialization</h3><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(require &apos;clojure.edn)
+=&gt; nil
+
+(def data { :a 1 :b [1 2 3 4 5] :c { :name &quot;Bob&quot; :age 19 }})
+=&gt; #&apos;user/data
+
+(spit &quot;my.edn&quot; data)
+=&gt; nil
+
+(def reconstituted (clojure.edn/read-string (slurp &quot;my.edn&quot;)))
+=&gt; #&apos;user/reconstituted
+
+reconstituted
+=&gt; {:c {:age 19, :name &quot;Bob&quot;}, :b [1 2 3 4 5], :a 1}</code></pre><ul><li>Clojure data and code are represented identically (homoiconicity)</li><li>A simple consequence of this is that serialization is trival</li><li>Note: clojure.edn/read-string won't execute code</li></ul></section><section><h2>In Conclusion:</h2><h2>Clojure Collections are Awesome!</h2><ul><li>There's more; For example:<ul><li>Clojure collections are Java read-only collections</li><li>There are tons of functions for using collections</li></ul><li>But I can't cover everything here</li></li></ul></section></section><section><section><h2>Clojure Targets Are Awesome!</h2></section><section><h2>Write Code Once</h2><a><img src="./Memes/SuccessKidClojure.jpg" /></a></section><section><h2>Wouldn't it be cool if...</h2><ul><li>You could write code that runs on the JVM?</li><li>And run as JavaScript in the browser?</li><li>That would be awesome!</li></ul></section><section><h2>Clojure, ClojureScript, CLJX</h2><ul><li>Clojure is a hosted Lisp on the JVM</li><li>ClojureScript is a hosted Lisp that compiles to JavaScript</li><li>CLJX is a Leiningen plugin that allows you to write common code to compile to both targets</li></ul></section><section><h2>In Conclusion:</h2><h2>Clojure Compilation Targets are Awesome!</h2><ul><li>Why write everything twice (or more)</li><li>Do it in Clojure!</li></ul></section></section><section><section><h2>Clojure Homoiconicity is Awesome!</h2></section><section><h2>Homoiconicity</h2><a><img src="./Memes/CodeIsData.jpg" /></a></section><section><h2>What is Homoiconicity?</h2><ul><li>Homoiconic code is represented in its own data structures</li><li>Is the following code or data?</li></ul><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(def code-or-data? { :name &quot;Bob&quot; :age 40 :shoe-size 10 })
+=&gt; #&apos;user/code-or-data?
+
+(prn code-or-data?)
+{:age 40, :shoe-size 10, :name &quot;Bob&quot;}
+=&gt; nil
+
+(+ 2 3 4 5 6)
+=&gt; 20
+
+&apos;(+ 2 3 4 5 6)
+=&gt; (+ 2 3 4 5 6)
+</code></pre></section><section><h2>Code as Data: Macros</h2><ul><li>What do you do with data?<ul><li>Manipulate, transform, analyze</li></ul></li><li>If code is data, I can...<ul><li>Manipulate, transform, and analyze it</li><li>This is what macros are all about</li></ul></li></ul></section><section><h2>A Simple Macro</h2><ul><li>Tired of printlns everywhere?</li><li>Check this out...</li></ul><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(defmacro ? &quot;Print a form and its value&quot;
+  [&amp; rest]
+  `(doto ~rest (-&gt;&gt; (str &apos;~rest &quot; -&gt; &quot;) prn)))
+=&gt; #&apos;user/?
+
+;This form is pretty simple, but what if you wanted to know what it did?
+(+ 1 2 3 4 5 6 7)
+=&gt; 28
+
+;You could do this, but it is ugly and you have to pull out the form later.
+(prn (+ 1 2 3 4 5 6 7))
+28
+=&gt; nil
+
+;Just stick the macro in there and see...
+(? + 1 2 3 4 5 6 7)
+&quot;(+ 1 2 3 4 5 6 7) -&gt; 28&quot;
+=&gt; 28</code></pre></section><section><h2>Code as Data: Data Formats</h2><ul><li>What else do you do with data?<ul><li>Manipulate, transform, analyze</li><li>Serialize, deserialize</li><li>This is what XML and JSON are all about</li><li>HTML documents are also data</li></ul></li><li>If code is data, I can...<ul><li>Easily convert my code to a different data or document format</li></ul></li></ul></section><section><h3>Clojure is JSON</h3><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(require &apos;(clojure.data [json :as json]))
+=&gt; nil
+(json/write-str {:a 1 :b [1 2 3 4 5]})
+=&gt; &quot;{\&quot;b\&quot;:[1,2,3,4,5],\&quot;a\&quot;:1}&quot;
+(json/read-str &quot;{\&quot;a\&quot;:1,\&quot;b\&quot;:[1,2,3,4]}&quot; :key-fn keyword)
+=&gt; {:a 1, :b [1 2 3 4]}</code></pre><a href="https://github.com/clojure/data.json">https://github.com/clojure/data.json</a></section><section><h3>Clojure is HTML</h3><p>Clojure</p><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(require &apos;hiccup.core)
+=&gt; nil
+(def slide
+  [:section
+     [:h2 &quot;Wouldn&apos;t it be cool if...&quot;]
+     [:ul
+      [:li &quot;You could write code that runs on the JVM?&quot;]
+      [:li &quot;And run as JavaScript in the browser?&quot;]
+      [:li &quot;And transform itself to and from HTML?&quot;]
+      [:li &quot;And transform itself to and from JSON?&quot;]
+      [:li &quot;That would be awesome!&quot;]]])
+=&gt; #&apos;user/slide
+(def html-text (hiccup.core/html slide))
+=&gt; #&apos;user/html-text
+html-text
+=&gt; &quot;&lt;section&gt;&lt;h2&gt;Wouldn&apos;t it be cool if...&lt;ul&gt;&lt;li&gt;You could write code that runs on the JVM?&lt;/li&gt;&lt;li&gt;And run as JavaScript in the browser?&lt;/li&gt;&lt;li&gt;And transform itself to and from HTML?&lt;/li&gt;&lt;li&gt;And transform itself to and from JSON?&lt;/li&gt;&lt;li&gt;That would be awesome!&lt;/li&gt;&lt;/ul&gt;&lt;/h2&gt;&lt;/section&gt;&quot;
+(require &apos;[hiccup-bridge.core :as hicv])
+=&gt; nil
+(def recovered (hicv/html-&gt;hiccup html-text))
+=&gt; #&apos;user/recovered
+recovered
+=&gt; ([:section [:h2 &quot;Wouldn&apos;t it be cool if...&quot;] [:ul [:li &quot;You could write code that runs on the JVM?&quot;] [:li &quot;And run as JavaScript in the browser?&quot;] [:li &quot;And transform itself to and from HTML?&quot;] [:li &quot;And transform itself to and from JSON?&quot;] [:li &quot;That would be awesome!&quot;]]])
+(= slide (first recovered))
+=&gt; true
+</code></pre><ul><li><a href="https://github.com/weavejester/hiccup">https://github.com/weavejester/hiccup</a></li><li><a href="https://github.com/hozumi/hiccup-bridge">https://github.com/hozumi/hiccup-bridge</a></li></ul></section><section><h2>In Conclusion:</h2><h2>Clojure Homoiconicity is Awesome!</h2><ul><li>With Homoiconicity:<ul><li>Code is data; data is code</li><li>It's easy to transform data (hence code)</li></ul><li>What would it take to do this in Java?</li></li></ul></section></section><section><section><h2>Clojure Concurrency is Awesome!</h2></section><section><h2>Java Concurrency</h2><a><img src="./Memes/SimplyWriteConcurrent.jpg" /></a></section><section><h2>Java Concurrency</h2><ul><li>java.util.concurrent has DOZENS of classes for concurrency</li><li>java.util.concurrent.atomic</li><li>java.util.concurrent.locks</li><li>How do I understand this?<ul><li>JCIP - 384 pages</li><li>Are you kidding me?</li><li>http://docs.oracle.com/cd/A97688_16/generic.903/bp/java.htm</li></ul></li><li>So not awesome!</li></ul></section><section><h2>Clojure Concurrency</h2><ul><li>Everything is immutable (implicity thread safe)</li><li>3 Primitives<ul><li>agents: Asynchronous & Uncoordinated</li><li>atoms: Synchronous & Uncoordinated</li><li>ref: Synchronous & Coordinated</li></ul></li><li>This is awesome!</li></ul></section><section><h2>In Conclusion:</h2><h2>Clojure Concurrency Awesome!</h2><ul><li>Java concurrency is NOT awesome</li><li>Immutability gives concurrency</li><li>Clojure concurrency primitives are easy to use</li></ul></section></section><section><section><h2>Clojure REPLs are Awesome!</h2></section><section><h2>What is a REPL?</h2><ul><li>Read-Evaluate-Print-Loop</li><li>An interactive shell session</li></ul></section><section><h2>The Lein Repl</h2><ul><li>lein repl</li><li>Puts you in a repl for your project</li><li>All your files are on your classpath</li></ul></section><section><h2>Awesome REPL Commands</h2><ul><li>The REPL has all kinds of cool interactive commands</li><li>doc: Print documentation</li><li>source: Prints the source</li><li>find-doc: Find documentation with a string</li><li>javadoc: Load javadoc in a browser</li><li>and more...</li></ul></section><section><h2>lein: Doc</h2><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(doc and)
+-------------------------
+clojure.core/and
+([] [x] [x &amp; next])
+Macro
+  Evaluates exprs one at a time, from left to right. If a form
+  returns logical false (nil or false), and returns that value and
+  doesn&apos;t evaluate any of the other expressions, otherwise it returns
+  the value of the last expr. (and) returns true.
+=&gt; nil</code></pre></section><section><h2>lein: source</h2><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(source let)
+(defmacro let
+  &quot;binding =&gt; binding-form init-expr
+
+  Evaluates the exprs in a lexical context in which the symbols in
+  the binding-forms are bound to their respective init-exprs or parts
+  therein.&quot;
+  {:added &quot;1.0&quot;, :special-form true, :forms &apos;[(let [bindings*] exprs*)]}
+  [bindings &amp; body]
+  (assert-args
+     (vector? bindings) &quot;a vector for its binding&quot;
+     (even? (count bindings)) &quot;an even number of forms in binding vector&quot;)
+  `(let* ~(destructure bindings) ~@body))
+=&gt; nil</code></pre></section><section><h2>lein: Find-doc</h2><pre><code class="clojure" contenteditable="contenteditable" data-trim="data-trim">(find-doc &quot;macro expansion&quot;)
+-------------------------
+clojure.pprint/*print-suppress-namespaces*
+  Don&apos;t print namespaces with symbols. This is particularly useful when
+pretty printing the results of macro expansions
+=&gt; nil</code></pre></section><section><h2>The Gorilla Repl</h2><ul><li>lein gorilla</li><li>Launches a gorilla repl at </li></ul></section><section><h2>In Conclusion:</h2><h2>Clojure REPLs are Awesome!</h2><ul><li>The REPL provides and interactive environment</li><li>Great for testing, prototyping, and debugging</li></ul></section></section><section><h2>In Conclusion:</h2><h2>Clojure is Awesome!</h2><ul><li>Do you want to be awesome?</li><li>Try Clojure!</li></ul></section></div></div><script src="bower_components/reveal.js/lib/js/head.min.js"></script><script src="bower_components/reveal.js/js/reveal.js"></script><script src="MathJax.Hub.Config({
+        tex2jax: {inlineMath: [[&amp;quot;$&amp;quot;,&amp;quot;$&amp;quot;],[&amp;quot;\(&amp;quot;,&amp;quot;\)&amp;quot;]]}
+      });" type="text/x-mathjax-config"></script><script src="bower_components/MathJax/MathJax.js?config=TeX-AMS_HTML-full" type="text/javascript"></script><script src="js/reveal-cl.js" type="text/javascript"></script></body></html></>
