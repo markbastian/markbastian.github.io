@@ -8,12 +8,7 @@ function fancyAlert(arg) {
 }
 ```
 
-<body>
 <div id="app">
-<h2>Figwheel template</h2>
-<p>Checkout your developer console.</p>
 </div>
-<script src="https://markbastian.github.io/tetris/js/compiled/tetris.js" type="text/javascript"></script>    
-<!--<script type="text/javascript">tetris.core.launch_tetris("app");</script>-->
-</body>
+<script src="http://markbastian.github.io/tetris/js/compiled/tetris.js" type="text/javascript"></script>
 
