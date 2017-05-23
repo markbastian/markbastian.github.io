@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Glyphs</title>
+    <!-- MathJax. -->
+    <!-- http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference -->
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+
+
+    </script>
+    <script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <link rel="stylesheet" type="text/css" href="../resources/css/style.css"/>
+</head>
+<body>
+<main>
+    <h6><a href="./index.html">Blog Index</a></h6>
+    <h1>
+        Polynomials and Macros
+        <small>December 28, 2016</small>
+    </h1>
+
+    <p>Create points</p>
+
+    <p>The next block</p>
+    <pre>
+        <code class="language-klipse">
+            (def grid-points (for[dx (range 3 18 5) dy (range 3 18 5)][dx dy]))
+
+        (defn point-set[n]
+            (set (take n (repeatedly #(rand-nth grid-points)))))
+
+        (defn random-connection[points]
+        (vec (take 2 (repeatedly #(rand-nth (vec points))))))
+
+            (defn build-glyph[np nl]
+        (let[ps (point-set np)]
+        (take nl (repeatedly #(random-connection ps)))))
+
+            (defn glyph[np nl]
+            ())
+</code>
+    </pre>
+
+    <p>fesfa</p>
+
+    <p>esfa</p>
+
+    <canvas id="canvas--regular-n-gon" class="center" width="400" height="400"></canvas>
+
+
+    <p>Conclusions</p>
+    <p>In this exercise, I explained efficient polynomial evaluation and tried a few techniques to see if some were
+        noticeably different than others. </p>
+
+</main>
+</body>
+
+<!--<link rel="stylesheet" type="text/css" href="http://app.klipse.tech/css/codemirror.css" />-->
+<link rel="stylesheet" type="text/css" href="../resources/css/codemirror.css"/>
+<link rel="stylesheet" type="text/css" href="../resources/css/monokai.css"/>
+
+<script>
+    window.klipse_settings = {
+        selector: '.language-klipse'// css selector for the html elements you want to klipsify
+    };
+</script>
+
+<script>window.klipse_settings = {selector: '.language-klipse'};</script>
+<!--<script src="http://app.klipse.tech/plugin/js/klipse_plugin.js"></script>-->
+<script src="../resources/js/klipse_plugin.js"></script>
+
+</html>

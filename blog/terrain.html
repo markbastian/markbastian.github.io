@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1D Terrain Generation</title>
+    <link rel="stylesheet" type="text/css" href="../resources/css/style.css" />
+</head>
+<body>
+<main>
+    <h6><a href="./index.html">Blog Index</a></h6>
+    <h1>
+        1D Terrain Generation
+        <small>December 17, 2016</small>
+    </h1>
+
+    <p>In the spirit of several recent blog posts I've seen that show the power of
+        <a href="http://blog.klipse.tech/">klipse</a>, I thought I'd show a simple
+        way to generate 1D terrains using midpoint displacement. You could use this in a variety of ways. Most obvious to me
+        are 2D games with some sort of terrain element.</p>
+
+    <p>This technique can be expanded to 2D, and it all centers around choosing a point between other points and
+    performing some appropriate displacement. Here's the basic function we'll be using. Note that it takes a seq of
+    points, so it can be used in higher-dimensional applications. The points are a set of heights and the roughness is
+    the maximum to displace the new average center height.</p>
+
+    <pre><code class="language-klipse">
+    (defn midpoint-displace [roughness pts]
+  (+ (/ (reduce + pts) (count pts)) (* roughness (dec (* 2.0 (rand))))))
+
+        ;Displace two points with heights 12 and 30 using a roughness of 20.
+    (midpoint-displace 20 [12 30])
+</code></pre>
+
+    <pre style="display: none;"><code class="language-klipse" >
+(def canvas (atom nil))
+
+(defn draw [pts]
+  (let [canvas (js/document.getElementById @canvas)
+        ctx (.getContext canvas "2d")
+        w (.-width canvas)
+        h (.-height canvas)]
+    (.clearRect ctx 0 0 w h)
+    (set! (.-fillStyle ctx) "dodgerblue")
+    (.fillRect ctx 0 0 w h)
+    (set! (.-fillStyle ctx) "limegreen")
+    (set! (.-mozFillRule ctx) "evenodd")
+    (.beginPath ctx)
+    (let [mx (/ w 2)
+          my (/ h 2)
+          [x y] (first pts)]
+      (.moveTo ctx (+ mx x) (+ my y))
+      (doseq [[x y] (rest pts)]
+        (.lineTo ctx (+ mx x) (+ my y))))
+    (.closePath ctx)
+    (.fill ctx "evenodd")))
+</code></pre>
+
+    <p>Now, all you need to do is recursively divide a vector of heights using the above function until every value in
+    the vector has been computed. The following function does this with the following arguments:
+    <ul>
+    <li>a : The vector of data to be filled in. Note that the vector needs to be of dimension 2^n+1, where n is any integer.</li>
+    <li>lo : The lower index of the span whose midpoint is to be computed.</li>
+    <li>hi : The upper index of the span whose midpoint is to be computed.</li>
+    <li>r : The roughness to be used for this span. Note that with each recursion, we halve the roughness.</li>
+</ul></p>
+
+    <pre><code class="language-klipse">
+    (defn subdivide-array
+  [a lo hi r]
+  (if (pos? (dec (- hi lo)))
+    (let [m (/ (+ lo hi) 2)]
+      (-> a
+          (assoc m (midpoint-displace r [(a lo) (a hi)]))
+          (subdivide-array lo m (* 0.5 r))
+          (subdivide-array m hi (* 0.5 r))))
+    a))
+</code></pre>
+
+    <p>Finally, we need a driver function that brings everything together. The argument is a map with the following keys:
+    <ul>
+        <li>miny: The y-value or height of the leftmost point in the vector.</li>
+        <li>maxy: The y-value or height of the rightmost point in the vector.</li>
+        <li>octaves: Value controlling the number of points in the vector, where n = 2^octaves+1.</li>
+        <li>roughness: The initial roughness of the terrain array, in the same units as miny and maxy.</li>
+    </ul></p>
+
+    <pre><code class="language-klipse">
+(defn gen-heightmap-1d [{:keys [miny maxy octaves roughness]}]
+  (let [maxdim (bit-shift-left 1 octaves)]
+    (-> (vec (repeat (inc maxdim) nil))
+        (assoc 0 (double miny))
+        (assoc maxdim (double maxy))
+        (subdivide-array 0 maxdim roughness))))
+
+    (gen-heightmap-1d {:miny -10.0 :maxy 34.0 :octaves 2 :roughness 40.0})
+</code></pre>
+
+    <p>And now we defined the function blah blah blah...</p>
+
+    <pre ><code class="language-klipse" data-preamble="(reset! canvas &#34;canvas--regular-n-gon&#34;)">
+(def terrain-seed {:miny -10.0 :maxy 34.0 :octaves 4 :roughness 40.0})
+</code></pre>
+
+    <pre style="display: none;"><code class="language-klipse" data-preamble="(reset! canvas &#34;canvas--regular-n-gon&#34;)">
+(let[heights (gen-heightmap-1d terrain-seed)
+    n (count heights)
+    dx (/ 400.0 (dec n))
+    coords (map (fn[i height][(- (* dx i) 200) height]) (range n) heights)]
+    (draw coords))
+</code></pre>
+
+
+    <canvas id="canvas--regular-n-gon" class="center" width="400" height="400"></canvas>
+
+</main>
+</body>
+
+<!--<link rel="stylesheet" type="text/css" href="http://app.klipse.tech/css/codemirror.css" />-->
+<link rel="stylesheet" type="text/css" href="../resources/css/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="../resources/css/monokai.css" />
+
+<script>
+    window.klipse_settings = {
+        selector: '.language-klipse'// css selector for the html elements you want to klipsify
+    };
+</script>
+
+<script>window.klipse_settings = {selector: '.language-klipse'};</script>
+<!--<script src="http://app.klipse.tech/plugin/js/klipse_plugin.js"></script>-->
+<script src="../resources/js/klipse_plugin.js"></script>
+
+</html>

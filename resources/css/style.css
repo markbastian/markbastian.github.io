@@ -1,0 +1,140 @@
+html, body {
+  font-family: 'PT Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14pt;
+  margin: 0;
+  color: #222;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto 5rem;
+}
+
+h2 a {
+  text-decoration: none;
+  color: #222;
+}
+
+h2 a:hover {
+  color: #aaa;
+}
+
+h6 {
+  color: #aaa;
+  font-weight: normal;
+  font-size: 14pt;
+  margin: 1rem 0;
+}
+
+h6 a {
+  text-decoration: none;
+  color: #aaa;
+}
+
+h6 a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  max-width: 20%;
+  border: solid #aaa;
+  border-width: 1px 0 0 0;
+  margin: 2rem auto;
+}
+
+small {
+  color: #aaa;
+  font-weight: normal;
+  font-size: 12pt;
+  display: block;
+}
+
+code {
+  background-color: hsl(0, 0%, 92%);
+  color: crimson;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+pre code {
+  background-color: transparent;
+  color: black;
+}
+
+p {
+  line-height: 1.5;
+}
+
+button {
+  font-size: 16pt;
+  padding: 10px 17px;
+  border-radius: 4px;
+  background-image: linear-gradient(to bottom, hsl(208, 100%, 56%) 0%, hsl(208, 100%, 35%) 100%);
+  box-shadow: 0 0 4px 2px dodgerblue inset;
+  color: white;
+  border: 1px solid hsl(208, 100%, 56%);
+}
+button:hover {
+  background-image: linear-gradient(to bottom, hsl(208, 100%, 35%) 0%, hsl(208, 100%, 56%) 100%);
+  cursor: pointer;
+}
+
+footer {
+  color: #aaa;
+}
+
+blockquote {
+  margin: 0 3rem;
+  position: relative;
+  font-style: italic;
+}
+blockquote::before {
+  content: '';
+  display: block;
+  border-radius: 2.5px;
+  width: 5px;
+  height: 100%;
+  background-color: lightgray;
+  position: absolute;
+  left: -0.75rem;
+}
+
+.hidden { display: none; }
+
+.read-more {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.center {
+  margin: 0 auto;
+  display: block;
+}
+
+.breathes {
+  margin-top: 1rem;
+}
+
+.swatch {
+  display: inline-block;
+  height: 3rem;
+  width: 3rem;
+  border: 1px solid gray;
+  margin-left: 2px;
+  margin-bottom: 12pt;
+}
+.swatch::after {
+  content: attr(data-color);
+  position: relative;
+  top: 3rem;
+  font-size: 9pt;
+  width: 3rem;
+  text-align: center;
+  display: block;
+  font-family: 'PT Monospace', monospace;
+}
+
+.graph {
+  width: 400px;
+  height: 200px;
+}

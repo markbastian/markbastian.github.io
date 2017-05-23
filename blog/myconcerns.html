@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Concern with Concerns</title>
+    <link rel="stylesheet" type="text/css" href="../resources/css/style.css"/>
+    <link rel="stylesheet" href="../bower_components/highlightjs/styles/zenburn.css">
+    <script src="../bower_components/highlightjs/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+<main>
+    <b>Introduction</b><br/>
+    In the Computer Science world we often talk about the value of Separation of Concerns (SoC). <a
+        href="https://en.wikipedia.org/wiki/Separation_of_concerns">This Wikipedia article</a> on the subject says that
+    well-separated code is more modular, maintainable, and reusable. The basic idea is that we separate our code into
+    components by their roles so that those pieces can be used and developed independently as well as assembled into a
+    greater whole.<br/>
+    <br/>
+    <div>
+        However, I am concerned with the traditional treatment of concerns. We often look at concerns as a breakdown of
+        our application into various interconnected pieces, or objects. For example, you might have a game program with
+        a rendering system, an input system, a physics system, and so on. A spreadsheet application might have concerns
+        regarding computations, persistence, and input. At a high level, and borrowing from the Wikipedia article, you
+        might have concerns for things like business logic, persistence, data access, and presentation.<br/>
+        <br/>
+        Two major flaws with the typical treatment of SoC as described above stand out to me:<br/>
+        <ol>
+            <li>In many of these systems the various parts require knowing about each other to the degree that if you
+                use one, you must also use the others. This leads to complected, interconnected systems. Rich Hickey
+                talks all about it <a href="http://www.infoq.com/presentations/Simple-Made-Easy">here</a>.
+            </li>
+            <li>We have jumped past some core fundamental concerns of how we think about computing and moved straight to
+                high level constructs (usually objects, layers, or systems). This is what I want to talk about.
+            </li>
+        </ol>
+    </div>
+    <div>
+        These are the three low level concerns I am concerned about:
+    </div>
+    <div>
+        <br/></div>
+    <div>
+        <b>1. Representation: How do you describe the world?</b><br/>
+        The first concern to consider is how you represent your world. In a traditional object oriented approach, the
+        simple solution is objects with their corresponding fields. Even in many functional or mostly functional
+        languages like Scala you will use value types to represent your world. Consider the following three ways to
+        represent a person:<br/>
+        <br/>
+        <b>Java
+        </b><br/>
+        <div>
+<pre><code>package concerns;
+
+public class Person {
+    private String name;
+    private int age;
+    private double weight;
+
+    public Person() {
+    }
+
+    public Person(String name, int age, double weight) {
+        this.name = name;
+        this.age = age;
+        this.weight = weight;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+}</code>
+</pre>
+        </div>
+        <b>Scala
+        </b><br/>
+        <div>
+            <pre><code>case class Person(name : String, age : Int, weight : Double)</code></pre>
+        </div>
+        <b>Clojure
+        </b><br/>
+        <div>
+            <pre><code>{ :name "Zaphod" :age 21 :weight 160.0 }</code></pre>
+        </div>
+        Clojure is unique in that practitioners generally represents the world as simple data structures. Other
+        languages would have you define a class for your data (Often in a painfully verbose way, I might add), but
+        Clojure simply views everything as data. You can use gen-class or defrecord, but you generally don't unless you
+        are shooting for Java interop or feel the need for a defined structural type.<br/>
+        <br/>
+        Clojure is relatively unique in that it allows you to flexibly represent anything using a small number of
+        primitives and heterogeneous, nested data structures. You have a single, uniform approach to representing
+        anything as data, whether it be simple or extremely complicated.<br/>
+        <br/>
+        Classes, on the other hand, require a new class for any level of modification of representation. A person with
+        height would need to extend a base Person (e.g. PersonWithHeight extends Person). This leads to elaborate type
+        hierarchies and an explosion of representations. Classes also fail disastrously when dealing with temporal
+        changes. Suppose you want to transition from a Caterpillar to a Butterfly or from an Employee to a Manger (You
+        got a promotion. Congratulations!). How do you handle these? Do you pass roles around? Does that work in the
+        caterpillar to butterfly case? Is there a GoF anti-pattern for that?<br/>
+        <br/>
+        This is not to say classes do not have their place. If your representation is well-known at design time a class
+        can be an excellent fit for your problem. For example, a 3D mathematical vector is very well defined with fields
+        along 3 axes. However, using classes to represent things with a wide variety of potential fields or that
+        transition over time can be a disaster.<br/>
+        <br/>
+        Clojure's simple approach to the concern of representation is wonderful, but we are here to discuss the
+        separation of concerns, so let's talk about another concern that we need to keep separate...<br/>
+        <br/>
+        <b>2. Behavior: How do you modify or use your representation of the world?</b><br/>
+        The next concern is how you modify the representation of your world, or how you transition from one
+        representation to another. Tied to this is how you do things with your objects, even if you don't modify them.
+        In OOP this is done by class methods that operate on themselves or objects they are familiar with. This seems
+        natural, as most verbs tend to operate on some noun. For example, a rename method clearly must rename something.
+        What is that thing? For an object, it logically is the thing rename is attached to.<br/>
+        <br/>
+        However, this complects the concerns of representation and&nbsp;behavior.<br/>
+        <br/>
+        Consider the trivial situation of managing named objects. What if I want to rename a person, car, dog, or file?
+        In OOP, I need to add a method to every object (e.g. setName or rename) that is nameable. You might argue for a
+        common base class (e.g. AbstractRenameable), but now everything must extend this class, and you don't want to
+        waste your one-shot inheritance on something so trivial. Instead, maybe you implement IName and proxy a
+        DefaultName. In any event, you are complected up the wazoo for something so simple as the ability to rename an
+        object. And you have to do this every time, for every field on every object.<br/>
+        <br/>
+        Wouldn't it be better to have some independent function that renames every structurally similar piece of data? I
+        can do this trivially in Clojure like this:<br/>
+        <div>
+<pre><code>(defn rename[o name](assoc o :name name))
+
+(pp/pprint
+  (rename
+    { :name "Zaphod Beeblebrox"
+     :age 21
+     :weight 160.0 }
+    "Ford Prefect"))
+
+(pp/pprint
+  (rename
+    { :type :spaceship
+     :name "Heart of Gold"
+     :color :red }
+    "Millenium Falcon"))</code></pre>
+        </div>
+        This produces the following output:<br/>
+        <div>
+<pre><code>{:name "Ford Prefect", :age 21, :weight 160.0}
+{:type :spaceship, :name "Millenium Falcon", :color :red}</code></pre>
+        </div>
+        One function that works on any structurally similar object. Compare this to putting a rename method on every
+        named object in existence. This is what I call a separation of concerns.<br/>
+        <br/>
+        Let's look at a slightly less trivial example. Suppose you are writing a sprite-based game and have a variety of
+        scene elements that you want to render. Each element must have information for its location and the image to be
+        drawn. Let's look at how you might render a sprite-based image in our three languages using Java 2D:<br/>
+        <br/>
+        <b>Java</b><br/>
+        Here is what you would add to the above class:<br/>
+        <div>
+<pre><code>public void render(Graphics2D g){
+    g.drawImage(getImage(), getX(), getY(), null);
+}</code></pre>
+        </div>
+        This, of course, assumes you have also added fields and methods to manage the image and the item's location.
+        You've now fundamentally intertwined your class with the Java 2D library, some AWT classes for handing images,
+        and whatever else you've done to make this work.<br/>
+        <br/>
+        <b>Scala</b><br/>
+        Scala suffers from the same problem as Java because it still complects the concerns of representation and
+        behavior. In Scala's defense, it does have duck typing, structural typing, and traits that allow you to do a
+        variety of things to repeat yourself a lot less. It's a better situation, but it does add complexity to your
+        solution and you have to go to a lot of effort to separate your behavior from your representation.<br/>
+        <br/>
+        <b>Clojure
+        </b><br/>
+        Clojure completely separates the concerns of representation and behavior by using pure data structures to
+        represent data and functions to represent behavior. The only required interface is correct structural inputs to
+        functions.<br/>
+        <div>
+<pre><code>(defn render [g {:keys [image x y]}]
+    (.drawImage g image x y nil))</code></pre>
+        </div>
+        In this example, any data conforming to the required interface (Having entries for the :image, :x, and :y keys)
+        can be rendered. The data has no knowledge of Graphics2D and is only loosely coupled to AWT by having a field
+        entry referencing an image. This data can be removed from the map entirely if not needed as opposed to an object
+        which would have a null field that still references a foreign API.&nbsp;</div>
+    <br/>
+    We're now double-complected in OOP-land and have complete separation with Clojure. Let's throw another concern into
+    the mix...<br/>
+    <br/>
+    <b>3. Management: How do you keep track of the current state of the world?</b><br/>
+    Separate from the idea of how you represent and act in your world is how you keep track of your current (and perhaps
+    historical) view of the world. This includes not just a handle to the current value of the world, but a mechanism
+    for watching for changes and responding accordingly.<br/>
+    <br/>
+    In Java this is accomplished via a fully implemented Java Bean, with getters, setters, property change support,
+    property change listeners, and so on. Your bean class will have a mechanism to wire up things that listen for
+    changes and changes are fired when change occurs. Again, we've further tied another concern to the object. We're now
+    complected x3.<br/>
+    <br/>
+    Scala doesn't address this concern directly, but you've got options. You can create Java Beans in Scala, but beans
+    are an ugly, complicated mess that should be avoided if possible. You can use the Akka library, but in my experience
+    Akka is too heavyweight and complicated for most problems.<br/>
+    <br/>
+    Clojure, on the other hand, has atoms, agents, and refs. These concurrency primitives are designed exactly for the
+    concern of state management. These 3 items each hold a value as their current state and have methods for performing
+    safe modification synchronously, asynchronously, uncoordinated, or coordinated, depending on which primitive you
+    need. All have the same API for dereferencing, watching for changes, and validating state. These primitives
+    completely separate the concern of state management from the other concerns described in this post. You can read
+    more about these primitives <a href="http://fn-code.blogspot.com/2015/09/clojure-state-management-by-example.html">here</a>.<br/>
+    <br/>
+    One really great thing about Clojure concurrency primitives is that they are easy to use from any other JVM
+    language, so you can leverage them in your Java or Scala projects to separate this concern if desired.<br/>
+    <br/>
+    <b>Summary and Conclusions</b><br/>
+    The following table summarizes what I have discussed in this post.<br/>
+    <style type="text/css">
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .tg td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+        }
+
+        .tg th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+        }
+
+        .tg .tg-yw4l {
+            vertical-align: top
+        }
+    </style>
+
+    <br/>
+    <table align="center" class="tg" style="text-align: center;">
+        <thead>
+        <tr>
+            <th class="tg-yw4l">Concern</th>
+            <th class="tg-yw4l">OOP</th>
+            <th class="tg-yw4l">FP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>State</td>
+            <td>Object Fields</td>
+            <td>Values/Data</td>
+        </tr>
+        <tr>
+            <td>Behavior</td>
+            <td>Object Methods</td>
+            <td>Functions</td>
+        </tr>
+        <tr>
+            <td>Management</td>
+            <td>Object References</td>
+            <td>Concurrency Primitives</td>
+        </tr>
+        <tr>
+            <td>Separation Level</td>
+            <td>Complected</td>
+            <td>Separated</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <br/></div>
+    The key takeaway is that objects fundamentally complect all concerns by their very nature. Clojure's separation of
+    data, functions, and state management allow for a clean separation of these concerns as part of the language design.
+    So, rather than beginning to design the world as objects, layers, and systems start with data, functions, and state.
+    The former solution automatically puts you on the road to complexity while the latter allows you to keep your
+    concerns separated all the way down.<br/>
+    <div>
+        <br/></div>
+
+</main>
+</body>
+</html>

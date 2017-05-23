@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conway's Game of Life</title>
+    <link rel="stylesheet" type="text/css" href="../resources/css/style.css"/>
+    <link rel="stylesheet" href="../bower_components/highlightjs/styles/zenburn.css">
+    <script src="../bower_components/highlightjs/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+<main>
+    <div>
+        <h3>March 30, 2015</h3>
+        <h2>The Project</h2>
+        <span style="font-family: Arial, Helvetica, sans-serif;">I wanted to create an interesting project in Clojure that had the following features:</span><br />
+        <ul>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">The project should be simple, but interesting</span></li>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">The project should demonstrate how Clojure, ClojureScript, and cljx interact</span></li>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">There should be some cool Clojure features to learn about</span></li>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">I wanted to demonstrate how to achieve state in a stateless world</span></li>
+        </ul>
+        <span style="font-family: Arial, Helvetica, sans-serif;">I chose to program up Conway's Game of Life, a simple zero-player cellular automaton. It's a fun little simulation
+    and meets all of my criterion. Here's what it looks like:</span><br />
+        <br /></div>
+    <div>
+        <canvas height="400" id="myCanvas" style="border: 1px solid #000000;" width="400"></canvas>
+    </div>
+    <div>
+        <button id="reset" type="button">Reset</button>
+    </div>
+    <div>
+        <br />
+        <h3>
+<span style="font-family: Arial, Helvetica, sans-serif;">
+The Rules</span></h3>
+        <ul>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A living cell with only one or two neighbors dies</span></li>
+        </ul>
+        <ul>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A living cell with two or three live neighbors survives</span></li>
+        </ul>
+        <ul>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A living cell with greater than three neighbors dies</span></li>
+        </ul>
+        <ul>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A dead cell with exactly three neighbors comes to life</span></li>
+        </ul>
+        <h2>
+<span style="font-family: Arial, Helvetica, sans-serif; font-size: large;">
+Postmortem</span></h2>
+        <h3>
+<span style="font-family: Arial, Helvetica, sans-serif;">
+Implementation in Clojure</span></h3>
+        <span style="font-family: Arial, Helvetica, sans-serif;">Conway's Game of Life is a cellular automaton in which a population of cells evolves with the
+        following rules:</span></div>
+    <div>
+<span style="font-family: Arial, Helvetica, sans-serif;">This project was coded up in Clojure as an example of what can be done using the clj/cljs/cljx
+        integration. It was done in three main files: rules.cljx, swingui.clj, and canvasui.cljs. Below you will find
+    the complete listing of the rules and canvasui namespaces. the swingui namespace is available via git
+        <a href="https://github.com/markbastian/conway">here</a>.</span></div>
+    <div>
+        <span style="font-family: Arial, Helvetica, sans-serif;"><b><br /></b></span>
+        <span style="font-family: Arial, Helvetica, sans-serif;"><b>rules.cljx</b></span><br />
+        <span style="font-family: Arial, Helvetica, sans-serif;">Here's a listing of the entire "rule engine" for the application.</span><br />
+        <pre><code>(ns conway.rules)
+
+(defn gen-cell[](if (&gt; (Math/random) 0.7) :alive :dead))
+
+(defn seed-grid [rows cols]
+  (vec (take rows (repeatedly
+    (fn [] (vec (take cols (repeatedly gen-cell))))))))
+
+(defn neighbors [[i j]]
+  (let [x ((juxt inc inc identity dec dec dec identity inc) i)
+        y ((juxt identity inc inc inc identity dec dec dec) j)]
+    (map vector x y)))
+
+(defn count-neighbors [grid coord]
+  (let [n (map #(get-in grid %) (neighbors coord))]
+    (count (filter #(= % :alive) n))))
+
+(defn sim-step [grid coord]
+  (let [n-live (count-neighbors grid coord)]
+    (if (= :alive (get-in grid coord))
+      (case n-live
+        (2 3) :alive
+        :dead)
+      (if (= 3 n-live) :alive :dead))))
+
+(defn step [grid]
+  (into [] (for [i (range (count grid))]
+          (into [] (for [j (range (count (get grid i)))]
+                  (sim-step grid [i j]))))))
+        </code></pre>
+        <span style="font-family: Arial, Helvetica, sans-serif;">Perhaps the most interesting aspect of this project is the amount of code (and I mean the small amount) written
+        to do this complete implementation. I am continually amazed as I write more Clojure about the expressiveness
+        and conciseness of the language. Another thing to point out about this file is the cljx extension. By using this, I
+        can write code that cross-compiles to target both the JVM and the browser via JavaScript. Pretty cool, eh?</span><br />
+        <span style="font-family: Arial, Helvetica, sans-serif;"><br /></span>
+        <span style="font-family: Arial, Helvetica, sans-serif;">Finally, I wanted to point out my favorite function in this program: juxt. the Clojure juxt function creates a
+        function that performs a sequence of operations on a single item and returns that result as an indexed data
+        structure. This is a perfect function for computing the neighbors of a cell in a grid. This is way better than
+        having 8 sequential function calls in which you compute steps to the right, upper right, top center, upper left,
+        and so on.</span><br />
+        <span style="font-family: Arial, Helvetica, sans-serif;"><br /></span>
+        <span style="font-family: Arial, Helvetica, sans-serif;"><b>canvasui.cljx</b></span></div>
+    <div>
+        <span style="font-family: Arial, Helvetica, sans-serif;">And here is the complete listing for the canvas UI code.</span><br />
+        <pre><code>(ns conway.canvasui
+  (:require [conway.rules :as rules]))
+
+(defn draw-background [canvas ctx]
+  (doto ctx
+    (-&gt; .-fillStyle (set! "#000000"))
+    (.fillRect 0 0 (.-width canvas) (.-height canvas))))
+
+(defn draw-and-update-grid [canvas ctx grid dim]
+  (let [dx (/ (.-width canvas) dim)
+        dy (/ (.-height canvas) dim)]
+    (do
+    (draw-background canvas ctx)
+    (-&gt; ctx .-fillStyle (set! "#00FF00"))
+    (doseq [i (range (count @grid))]
+      (doseq [j (range (count (get @grid i)))]
+        (when (= :alive (get-in @grid [i j]))
+          (.fillRect ctx (* dx i) (* dy j) dx dy))))
+    (swap! grid rules/step))))
+
+(set!
+  (.-onload js/window)
+  (when (and js/document (.-getElementById js/document))
+    (let [cells 50
+          grid (atom (rules/seed-grid cells cells))
+          canvas (.getElementById js/document "myCanvas")
+          reset-button (.getElementById js/document "reset")
+          ctx (.getContext canvas "2d")]
+      (do
+        (js/setInterval
+          #(draw-and-update-grid canvas ctx grid cells) 10)
+        (set! (.-onclick reset-button)
+          #(reset! grid (rules/seed-grid cells cells)))))))
+        </code></pre>
+        <span style="font-family: Arial, Helvetica, sans-serif;">Again, it is amazing how few lines of code were written for this demo.</span><br />
+        <span style="font-family: Arial, Helvetica, sans-serif;"><br /></span>
+        <span style="font-family: Arial, Helvetica, sans-serif;">Finally, take a look at how state is managed in the program. Notice that there are no defs (global variables
+        within the namespace) anywhere. All of the state is managed by a single atom (line 25) that is created within the
+        initialization section of the script and is passed to each function. The draw-and-update-grid function draws and
+        updates the grid (as you might expect) while the reset button is used to reset the grid. Since atoms are
+        synchronous, I don't need to worry about any sort of concurrency problems. It just works.</span><br />
+        <span style="font-family: Arial, Helvetica, sans-serif;"><br /></span>
+        <span style="font-family: Arial, Helvetica, sans-serif;">This is a very common pattern in the Clojure world for designing applications. You have three elements:
+    </span><br />
+        <ol>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A set of rules that can be thought of as an API or DSL for your project. These rules consist only of defns
+            or perhaps defs that define constants. They are used to transform or analyze a model. They are completely stateless.</span></li>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A very small number of Clojure concurrency primitives that manage the actual state of the application. In
+            this case, there is only 1 - the grid atom. You might have other primitives, such as one for preferences, but
+            the number should be small and separated by concerns.</span></li>
+            <li><span style="font-family: Arial, Helvetica, sans-serif;">A user interface layer. It could be Swing, an HTML app using ClojureScript, or just a repl.</span></li>
+        </ol>
+        <span style="font-family: Arial, Helvetica, sans-serif;">Coming from a background in 10+ years of Java and then about 6 years of Scala, this
+    was something it took me a while to understand, but now I can't live without. When I got deep into Scala I really
+    loved it, but had the hardest time figuring out how to manage state. With Clojure everything is just baked in.</span></div>
+    <div>
+        <h2>
+<span style="font-family: Arial, Helvetica, sans-serif; font-size: large;">
+In Conclusion</span></h2>
+        <span style="font-family: Arial, Helvetica, sans-serif;">I was able to write up a simple cross-platform application in just a handful of lines of code using the amazing
+        powers of Clojure, ClojureScript, and the cljx project. Despite its simplicity, there are some great things to learn
+        from the project. If you want to see the entire project, check it out
+        <a href="https://github.com/markbastian/conway">here</a> or my entire github repo
+        <a href="https://github.com/markbastian">here</a>. I hope you enjoyed this project and short postmortem.</span><br />
+        <span style="font-family: Arial, Helvetica, sans-serif;"><br /></span>
+        <span style="font-family: Arial, Helvetica, sans-serif;">If you liked this page or learned anything from it, please tweet the link and/or follow me on Twitter. I hope to
+    have other projects like this in the future, and your support and interest is the fuel that drives the effort.</span></div>
+    <a class="twitter-share-button" data-url="http://fn-code.blogspot.com/2015/03/conways-game-of-life-demonstration-and.html" data-via="mark_bastian" href="https://twitter.com/share">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <a class="twitter-follow-button" data-show-count="false" href="https://twitter.com/mark_bastian">Follow @mark_bastian</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <a class="twitter-hashtag-button" data-related="mark_bastian" href="https://twitter.com/intent/tweet?button_hashtag=clojure">Tweet #clojure</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+    <script src="../conway/js/conway.js"></script>
+</main>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clojure State Management by Example</title>
+    <link rel="stylesheet" type="text/css" href="../resources/css/style.css"/>
+    <link rel="stylesheet" href="../bower_components/highlightjs/styles/zenburn.css">
+    <script src="../bower_components/highlightjs/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+
+    </script>
+    <script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+<main>
+    <h3>Clojure State Management by Example</h3>
+    <h3><small>September 24, 2015</small></h3>
+    <b>Introduction</b><br/>
+    One of my favorite features of Clojure is the way changes in application state are handled. In Clojure we separate
+    the concerns of our data (which is stored as values) and the management of how that data might change over time.
+    Contrast this to most other languages that have mutable state tied to their object model at some level.<br/>
+    <br/>
+    There are four state management primitives. Here's a very simple example of each and how they behave.<br/>
+    <div>
+        <br/></div>
+    <div>
+        <b>Vars</b></div>
+    <div>
+        Vars are what you get when you use def. def simply defines a value. If you declare the def'd value as dynamic,
+        you can rebind it on a per-thread basis. Meaning, within your current scope you can rebind the value of the
+        previously def'd value. Here's the example:
+    </div>
+    <div>
+        <div>
+<pre><code>(def ^:dynamic *a* 0) ;Note the *earmuff*
+(def ^:dynamic *b* 1) ;Clojure uses them for things mean to be rebound
+
+(prn (str "(original) a, b = " *a* "," *b*))
+
+(future
+  (binding [*a* 1 *b* 0]
+    (prn (str "(rebinding) a, b = " *a* "," *b*))
+    (binding [*a* 11 *b* 45]
+      (prn (str "(another binding) a, b = " *a* "," *b*)))
+    (prn (str "(exiting scope) a, b = " *a* "," *b*)))
+  (prn (str "(exiting scope) a, b = " *a* "," *b*)))
+
+(prn (str "(original ns value) a, b = " *a* "," *b*))
+</code></pre>
+        </div>
+        The above produces this output:<br/>
+        <div>
+<pre><code>"(original) a, b = 0,1"
+"(rebinding) a, b = 1,0"
+"(original ns value) a, b = 0,1"
+"(another binding) a, b = 11,45"
+"(exiting scope) a, b = 1,0"
+"(exiting scope) a, b = 0,1"
+</code></pre>
+        </div>
+        As you can see, every time I rebind a and b in a new form, the old value are replaced within that scope. As soon
+        as the form is exited, we are back to the previous binding. Finally, you can see that the last prn statement
+        that prints the original binding value is unaffected by the future since the future is in a different thread. I
+        don't find vars particularly useful or interesting, but for completeness's sake, there you have it. Our next
+        three concurrency primitives are much more interesting.<br/>
+        <br/></div>
+    <div>
+        <b>Atoms</b></div>
+    <div>
+        Atoms provide synchronous, uncoordinated state management. These are the workhorse of Clojure state management.
+        Here's how it works using a simple example that updates two atoms and dumps out their results. A built-in delay
+        is added to each update for illustration's sake.
+    </div>
+    <div>
+        <div>
+<pre><code>(def a (atom 0))
+(def b (atom 1))
+
+(defn slow [f] (Thread/sleep 300) f)
+(defn slower [f] (Thread/sleep 400) f)
+
+(future
+  (do
+    (swap! a (comp slow inc))
+    (swap! b (comp slower dec))))
+
+(future
+  (loop [i 10]
+    (when (pos? i)
+      (do
+        (prn (str "a, b = " @a "," @b))
+        (Thread/sleep 100)
+        (recur (dec i))))))
+</code></pre>
+        </div>
+        Output:<br/>
+        <div>
+<pre><code>"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 1,1"
+"a, b = 1,1"
+"a, b = 1,1"
+"a, b = 1,1"
+"a, b = 1,0"
+"a, b = 1,0"
+"a, b = 1,0"
+</code></pre>
+        </div>
+        <br/></div>
+    <div>
+        The above output illustrates that atoms are synchronous since it took 300ms for <i>slow</i> to execute on a and
+        an additional 400ms for <i>slower</i> to execute on b. Also, the functions are uncoordinated - There is a time
+        when <i>slow</i> has completed its work and <i>slower</i> has not. There is no connection between the two swap!
+        operations.<br/>
+        <br/>
+        <b>Refs</b></div>
+    <div>
+        Refs provide synchronous, coordinated state management. Use a ref when you need a transaction to be performed
+        correctly. For example, you could use Refs to track funds in a bank account. To transfer funds from one Ref'd
+        account to another, put the transaction in a synchronized ref block. The following example is identical to the
+        above, except that now we are altering a and b in a synchronized code block.
+    </div>
+    <div>
+        <div>
+<pre><code>(def a (ref 0))
+(def b (ref 1))
+
+(defn slow [f] (Thread/sleep 300) f)
+(defn slower [f] (Thread/sleep 400) f)
+
+(future
+  (dosync
+    (alter a (comp slow inc))
+    (alter b (comp slower dec))))
+
+(future
+  (loop [i 10]
+    (when (pos? i)
+      (do
+        (prn (str "a, b = " @a "," @b))
+        (Thread/sleep 100)
+        (recur (dec i))))))
+</code></pre>
+        </div>
+        Output:<br/>
+        <div>
+<pre><code>"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 1,0"
+"a, b = 1,0"
+"a, b = 1,0"
+</code></pre>
+        </div>
+        <br/></div>
+    <div>
+        Unlike the previous example, no change occurred in a or b until both the <i>slow</i> and <i>slower</i> functions
+        were applied to a and b. Since the operations were synchronous, it took the entire compute time of both
+        functions to pass before both a and be were concurrently updated.<br/>
+        <b><br/></b>
+        <b>Agents</b></div>
+    <div>
+        Agents provide asynchronous, uncoordinated state management. If you want reactive behavior, use agents. As
+        before, we are using the same example to illustrate agent behavior.
+    </div>
+    <div>
+<pre><code>(def a (agent 0))
+(def b (agent 1))
+
+(defn slow [f] (Thread/sleep 300) f)
+(defn slower [f] (Thread/sleep 400) f)
+
+(future
+  (do
+    (send a (comp slow inc))
+    (send b (comp slower dec))))
+
+(future
+  (loop [i 10]
+    (when (pos? i)
+      (do
+        (prn (str "a, b = " @a "," @b))
+        (Thread/sleep 100)
+        (recur (dec i))))))
+</code></pre>
+    </div>
+    Output:<br/>
+    <div>
+<pre><code>"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 0,1"
+"a, b = 1,1"
+"a, b = 1,0"
+"a, b = 1,0"
+"a, b = 1,0"
+"a, b = 1,0"
+"a, b = 1,0"
+"a, b = 1,0"
+</code></pre>
+    </div>
+    <br/>
+    In this case, we see that both <i>slow</i> and <i>slower</i> executed concurrently, since a was updated after 300ms
+    and b was updated only 100ms later.<br/>
+    <br/>
+    <b>Summary</b><br/>
+    Clojure's concurrency primitives are very easy to use and make it simple to manage program state. However, it is
+    important to know when to use which. Hopefully this simple set of examples will give you a clear idea as to the
+    behaviors of each so that you'll know when to use them.<br/>
+    <br/>
+</main>
+</body>
+</html>
