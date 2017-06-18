@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mark&#39;s Functional Thoughts: Exercises in Clojure with Commentary</title>
+    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-05-27-exercises/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mark&#39;s Functional Thoughts</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        More <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Links</li>
+                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
+                        
+                        <li><a href="/pages-output/presentations/">Presentations</a></li>
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Recent Posts</li>
+                        
+                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
+                        
+                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
+                        
+                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-11-differences/">Differences between Null, Nil, nil, Some, and None</a></li>
+                        
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Tags</li>
+                        
+                        <li><a href="/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/tags-output/cryogen/">cryogen</a></li>
+                        
+                        <li><a href="/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/tags-output/conway/">conway</a></li>
+                        
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">May 27, 2015</div>
+        
+    </div>
+    <h2>Exercises in Clojure with Commentary</h2>
+</div>
+<div>
+    <ol class="content"><li><a href="#introduction">Introduction</a></li><ol><li><a href="#problem_1:_square_code/crypto_square">Problem 1: Square Code/Crypto Square</a></li><li><a href="#problem_2:_kindergarten_garden">Problem 2: Kindergarten Garden</a></li><li><a href="#problem_3:_treasure_hunt">Problem 3: Treasure Hunt</a></li><li><a href="#problem_4:_queen_attack">Problem 4: Queen Attack</a></li></ol><li><a href="#conclusion">Conclusion</a></li></ol>
+    <h2 id="introduction">Introduction</h2><p>I was recently browsing some links from my Twitter feed and came across some programming exercises and their solutions. I selected a few that I thought were interesting, solved them, and now I want to present my solutions here along with some commentary on how they were solved. I think the solutions and especially their comments might be helpful to new Clojurists as well as Java developers who are looking for some examples of why Clojure code is so much more concise. Without further ado, here they are.</p><h3 id="problem&#95;1:&#95;square&#95;code/crypto&#95;square">Problem 1: Square Code/Crypto Square</h3><p>Read all about it <a href='https://github.com/trikitrok/MyExercismExercises/blob/master/clojure/crypto-square/README.md'>here</a>  and <a href='http://users.csc.calpoly.edu/~jdalbey/103/Projects/ProgrammingPractice.html#easy'>here</a>.  Basically, you do the following to encode a text string:</p><ol><li>Convert the initial string to a lowercase character string with only alpha characters</li><li>Arrange the result of step 1 into a square of text (If the string length is not a square integer the last line will not be as long as the rest of the square)</li><li>Create a sentence in which the "words" are the columns of the squareHere is my solution:</li></ol><pre><code class="clojure">&#40;require '&#91;clojure.string :as s&#93;&#41;
+
+&#40;defn crypto-square&#91;s&#93;
+  &#40;let&#91;ss &#40;-&gt; s s/lower-case &#40;s/replace #&quot;&#91;&#94;a-z&#93;&quot; &quot;&quot;&#41;&#41;
+       l &#40;-&gt; ss count Math/sqrt Math/ceil int&#41;&#93;
+    &#40;-&gt;&gt; ss
+         &#40;partition l l &#40;repeat &quot;&quot;&#41;&#41;
+         &#40;apply map vector&#41;
+         &#40;map #&#40;apply str %&#41;&#41;
+         &#40;s/join &quot; &quot;&#41;&#41;&#41;&#41;
+</code></pre><p>You can give it a try right here: <br /> <div> <fieldset style="background-color: #f0f0f0;"> <br /> <form> Enter text to encode: <input id="cryptosquare-input" size="80" type="text" value="A beginning is the time for taking the most delicate care that the balances are correct." /></p><p><script> function myFunction() { var x = document.getElementById("cryptosquare-input"); var out = practice.funcs.crypto_square(x.value); document.getElementById("cryptosquare-output").innerHTML = out; } </script></p><p><button onclick="myFunction()" type="button">Convert!</button> <br /> Result:<br /> <div id="cryptosquare-output"> </div> </form> </fieldset> <br /> <script src="../../js/cljpractice.js"></script></p><p>Commentary:</p><ul><li>This solution makes heavy use of threading macros (<a href='https://clojuredocs.org/clojure.core/-%3E'>-></a>is called "Thread first" and <a href='https://clojuredocs.org/clojure.core/-%3E%3E'>->></a> is called "Thread last"). These are great for assembling computation pipelines. These macros take the item after the arrow and repeatedly insert the argument into the next form in the pipeline, carrying forward the result into each successive form. The "first" and "last" refer to where in the succeeding form the new argument goes (first goes after the function name in the form, last goes in the last position in front of the last parens).</li><li>The <a href='https://clojuredocs.org/clojure.core/partition'>partition</a> function creates partitions from a sequence with a specified chunk and step size. A final default argument is used to pad the last partition when the sequence cannot be equally subdivided.</li><li>The default padding argument to partition along with the repeat function make ensuring that the string was square trivial. Any missing characters in a non-square string are filled in by padding with empty strings.</li><li>The apply method (which I use in several more of these examples) "applies" a function to a sequence by inserting the function in the first position of the sequence and evaluates the new sequence as if it were a list.</li><li>A key takeaway in this example is that threading computations as shown really only works with immutability and side-effect free functions. Were either of these properties missing, there are no guarantees regarding your computations and assembling these sorts of pipelines are impossible.</li></ul><h3 id="problem&#95;2:&#95;kindergarten&#95;garden">Problem 2: Kindergarten Garden</h3><p>In this problem, described <a href='https://github.com/trikitrok/MyExercismExercises/blob/master/clojure/kindergarten-garden/README.md'>here</a>  and solved <a href='http://garajeando.blogspot.com/2015/05/exercism-kindergarten-garden-in-clojure.html'>here</a>,   two rows of plants are assigned to a group of students who are sorted alphabetically by name. Each student gets a block of plants from left to right (two each in the front row and two each in the back). Depending on the letters in the diagram, you are to determine which kind of plants each student has.</p><pre><code class="clojure">;Solution 1
+&#40;defn char-&gt;plant&#91;s&#93;
+  &#40;map #&#40;case %
+         \V &quot;Violets&quot;
+         \R &quot;Radishes&quot;
+         \C &quot;Clover&quot;
+         \G &quot;Grass&quot;&#41; s&#41;&#41;
+
+&#40;defn kinder&#91;names rows&#93;
+  &#40;apply merge-with concat
+         &#40;map
+           #&#40;zipmap &#40;sort names&#41; &#40;partition 2 %&#41;&#41;
+           &#40;map char-&gt;plant &#40;s/split-lines rows&#41;&#41;&#41;&#41;&#41;
+
+;Solution 2
+&#40;defn kinder-thread-last&#91;names rows&#93;
+  &#40;-&gt;&gt; rows
+       &#40;s/split-lines&#41;
+       &#40;map #&#40;map { \V &quot;Violets&quot; \R &quot;Radishes&quot; \C &quot;Clover&quot; \G &quot;Grass&quot; } %&#41;&#41;
+       &#40;map #&#40;zipmap &#40;sort names&#41; &#40;partition 2 %&#41;&#41;&#41;
+       &#40;apply merge-with concat&#41;&#41;&#41;
+</code></pre><p>Results:</p><pre><code class="clojure">&#40;def ch &#91;&quot;Alice&quot; &quot;Bob&quot; &quot;Charlie&quot; &quot;David&quot; &quot;Eve&quot; &quot;Fred&quot; &quot;Ginny&quot; &quot;Harriet&quot; &quot;Ileana&quot; &quot;Joseph&quot; &quot;Kincaid&quot; &quot;Larry&quot;&#93;&#41;
+&#40;def rows &quot;VRCGVVRVCGGCCGVRGCVCGCGV\nVRCCCGCRRGVCGCRVVCVGCGCV&quot;&#41;
+&#40;prn &#40;&#40;kinder-thread-last ch rows&#41; &quot;David&quot;&#41;&#41;
+;prints &#40;&quot;Radishes&quot; &quot;Violets&quot; &quot;Clover&quot; &quot;Radishes&quot;&#41;
+</code></pre><p>Commentary:</p><ul><li>I provided two solutions. My first did not use threading macros. I think the thread last version (#2) is much easier to read. It is quite easy to see the sequence of steps being followed.</li><li>Another important thing to note is how I mapped the characters in the gardens to plants. I can use a case statement like what is done in the char->plant function. However, a simpler and more concise solution is to simply use a map. Clojure maps (and vectors and sets) are not just data structures, but are also functions. This may seem weird at first, but it actually makes sense. A map (in any language) is simply a discrete 1:1 function that maps keys to values. A vector is a function of its indices and a set is a function of its contents. Using this knowledge, I just mapped the characters in the strings using the map of characters to plant names as an inlined function.</li></ul><h3 id="problem&#95;3:&#95;treasure&#95;hunt">Problem 3: Treasure Hunt</h3><p>In the treasure hunt problem described <a href='http://users.csc.calpoly.edu/~jdalbey/103/Projects/ProgrammingPractice.html'>here</a>  you are given a 2D array of two digit map coordinates. From a starting coordinate that I am assuming comes from a pirate, you look up each successive coordinate on the map by using the first and second digits of the current coordinate as the row and column on the map. Once a coordinate maps to itself, start digging, you are done.</p><p>Here is my solution:</p><pre><code class="clojure">&#40;defn map-step&#91;m clue&#93;
+  &#40;let &#91;n &#40;get-in m &#91;&#40;dec &#40;quot clue 10&#41;&#41; &#40;dec &#40;rem clue 10&#41;&#41;&#93;&#41;&#93;
+    &#40;when &#40;not= n clue&#41; n&#41;&#41;&#41;
+
+&#40;defn treasure-hunt &#91;m start&#93;
+  &#40;take-while identity &#40;iterate &#40;partial map-step m&#41; start&#41;&#41;&#41;
+</code></pre><p>Here it is in action: </p><pre><code class="clojure">&#40;def treasure-map &#91;&#91;34 21 32 41 25&#93;
+                   &#91;14 42 43 14 31&#93;
+                   &#91;54 45 52 42 23&#93;
+                   &#91;33 15 51 31 35&#93;
+                   &#91;21 52 33 13 23&#93;&#93;&#41;
+
+&#40;prn &#40;treasure-hunt treasure-map 11&#41;&#41;
+;prints &#40;11 34 42 15 25 31 54 13 32 45 35 23 43 51 21 14 41 33 52&#41;
+</code></pre><p>Commentary:</p><ul><li>The map-step function simply computes the next step in the map. What's beautiful about this method is that it very naturally uses the Clojure get-in function to solve the problem. get-in is a Clojure function that allows you to drill down into a nested data structure by providing a vector of successive indices. Conveniently, our two-digit coordinates can be split into a vector for get-in access. Note that I do need to decrement the coordinates to make them 0 indexed.</li><li>The only additional logic required was the exit criteria. I compared the looked up coordinate to the input. If they are different, I return the update. Otherwise, nil is returned.</li><li>The treasure-hunt is where the real awesomeness happens. I can create a <a href='https://clojuredocs.org/clojure.core/partial'>partial</a> map-step function by filling in the first argument of the function with a treasure map. I now have a function that  takes an [x y] coordinate and returns an [x y] coordinate. I want to repeatedly do this until I return nil.   Sounds like a perfect candidate for Clojure's <a href='https://clojuredocs.org/clojure.core/iterate'>iterate</a> function.   iterate takes a function and an initial condition and repeatedly   returns the result of the applied function and reapplies that result to itself. To determine a stopping condition,    I take results while the function satisfies the <a href='https://clojuredocs.org/clojure.core/identity'>identity</a> function.    Identity is a clever method that simply returns what is passed to it. In Clojure, anything not false or nil will pass logical truth tests (this is called truthiness), so as long as my function returns new coordinates I will take coordinates from it.</li><li>It is quite common in Clojure to store your state in a structure and do a computation that returns a new state that is similarly structured to the original. Whenever you do this, iterate may be a great option. You can take a certain number of items from the iterated function or continue until a stop condition is met.</li><li>Finally, this problem really is one of data navigation, and that is something Clojure excels at. Clojure is all about nested heterogeneous data structures and has many methods to safely inspect, update, and transform them. Furthermore, Clojure's semantics for truthiness and handling of nil makes what would normally be exceptional behavior simple to handle.</li></ul><h3 id="problem&#95;4:&#95;queen&#95;attack">Problem 4: Queen Attack</h3><p>The basic problem is this:  Given two queens on a chessboard, are they in an "attack" configuration.  In other words, are they in a shared column, row, or diagonal. Here's a <a href='http://garajeando.blogspot.com/2015/05/exercism-queen-attack-in-clojure.html'>solution</a> from my original browsing exercise. As presented <a href='http://users.csc.calpoly.edu/~jdalbey/103/Projects/ProgrammingPractice.html'>here</a>,  the problem is to encode an 8x8 board using different characters. I took a different approach and simply used the coordinates of the pieces to determine if they were visible to each other.</p><p>Here is my complete solution:</p><pre><code class="clojure">&#40;defn queen-attack?&#91;w b&#93;
+  &#40;let &#91;diff &#40;map - w b&#41;
+        zs &#40;&#40;juxt first second #&#40;reduce - %&#41; #&#40;reduce + %&#41;&#41; diff&#41;&#93;
+    &#40;true? &#40;some zero? zs&#41;&#41;&#41;&#41;
+</code></pre><p>Here are a few invocations of the function with results in comments:</p><pre><code class="clojure">&#40;prn &#40;queen-attack? &#91;2 3&#93; &#91;2 10&#93;&#41;&#41; ;true - same row
+&#40;prn &#40;queen-attack? &#91;9 10&#93; &#91;2 10&#93;&#41;&#41; ;true - same column
+&#40;prn &#40;queen-attack? &#91;4 3&#93; &#91;2 10&#93;&#41;&#41; ;false
+&#40;prn &#40;queen-attack? &#91;7 12&#93; &#91;5 10&#93;&#41;&#41; ;true - same diagonal
+</code></pre><p>Commentary:</p><ul><li>The most important thing to note in this solution is that being on the same row, column, or diagonal reduces to simple difference checks on the piece indices. A zero difference in the row or column means you are on the same row or column. If the sum or difference of the row and column change is 0 you are on the same diagonal. If this last rule doesn't make sense, stop for a second and think about it. To move diagonally, you must move the same amount up or down as you do left or right. So, the sum or difference (depending on direction) will be 0.</li><li>I use <a href='http://fn-code.blogspot.com/2015/03/using-juxt-to-compute-signed-angular.html'>juxt</a> to compute the 4 potential zeroes. I also discuss juxt at length in this post.</li><li><a href='https://clojuredocs.org/clojure.core/some'>some</a> <a href='https://clojuredocs.org/clojure.core/zero_q'>zero?</a> checks if any zeroes exist. If any exist, the result is true. It none exist the result is nil. Therefore, I call true? to covert a nil to false. Note that Clojure uses "truthiness" when doing logic checks (i.e. nil and false return false, everything else returns true). So, I could just as easily drop the true? check if I felt like it.</li><li>Probably the biggest takeaway from this problem is the difference between a standard OOP solution vs. an FP solution.In OOP the natural approach to the problem would be to start with a  nice class hierarchy such as a Board (which would contain 64 Squares). You would probably have a ChessPiece class which you'd extend into Pawn, Rook, Knight, Bishop, Queen, and King classes. At this point you'd probably determine some basic methods such as move and attack which would allow you to finally approach solving the problem. In FP, you generally think directly in terms of what you are trying to do since your domain model is just data. Had I been asked to solve the problem for all chess pieces in Clojure, I'd probably just create a <a href='https://clojuredocs.org/clojure.core/defmulti'>multimethod</a> that dispatches on the attacker type (:pawn, :rook, :knight, :bishop, :queen, or :king). Each resulting <a href='https://clojuredocs.org/clojure.core/defmethod'>defmethod</a> would be as concise as the above function.</li></ul><h2 id="conclusion">Conclusion</h2><p>In a few short lines, I was able to solve 4 programming puzzlers using Clojure. While none of the problems were particularly hard, each illustrated several interesting functions and aspects of Clojure programming that I thought were worth pointing out. In particular, Clojure excels at representing, manipulating, and navigating data as simple structures. I find it much easier to model the data directly using Clojure's data structures than developing elaborate class hierarchies for each problem. This way of thinking allows you to jump right into solving your problem without having to spend a lot of time figuring out how to represent the data.</p><p>If you liked this page or learned anything from it, please tweet the link,follow me on Twitter, and/or follow this blog. Your support and interest is the fuel that drives the effort.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/clojure/">clojure</a>
+    
+    <a href="/tags-output/functional programming/">functional programming</a>
+    
+    <a href="/tags-output/clojurescript/">clojurescript</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-06-11-differences/">&laquo; Differences between Null, Nil, nil, Some, and None</a>
+        
+        
+        <a class="right" href="/posts-output/2015-05-15-fpfirehose/">Functional Programming from the Fire Hose &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://markbastian.github.io/posts-output/2015-05-27-exercises/";
+            this.page.identifier = "Exercises in Clojure with Commentary";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//markbastian.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2017 Mark Bastian
+        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+ <link rel="stylesheet" type="text/css" href=nil>
+<script>
+window.klipse_settings = null;
+</script>
+<script src=nil></script> 
+
+</body>
+</html>

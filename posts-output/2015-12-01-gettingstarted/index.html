@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mark&#39;s Functional Thoughts: Clojure: Getting Started</title>
+    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-12-01-gettingstarted/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mark&#39;s Functional Thoughts</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        More <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Links</li>
+                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
+                        
+                        <li><a href="/pages-output/presentations/">Presentations</a></li>
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Recent Posts</li>
+                        
+                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
+                        
+                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
+                        
+                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-11-differences/">Differences between Null, Nil, nil, Some, and None</a></li>
+                        
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Tags</li>
+                        
+                        <li><a href="/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/tags-output/cryogen/">cryogen</a></li>
+                        
+                        <li><a href="/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/tags-output/conway/">conway</a></li>
+                        
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">December 1, 2015</div>
+        
+    </div>
+    <h2>Clojure: Getting Started</h2>
+</div>
+<div>
+    <ol class="content"><li><a href="#introduction">Introduction</a></li><ol><li><a href="#pick_a_project">Pick a Project</a></li><li><a href="#watch_&amp;&amp;#95;read">Watch & Read</a></li></ol><li><a href="#in_conclusion">In Conclusion</a></li></ol>
+    <h2 id="introduction">Introduction</h2><p>Often people will ask me how to get started in Clojure. Most often they have a Java background, but sometimes they are  coming from C++, Python, or some other popular language. Either way, I rehash the same story and spent a bunch of time  finding and consolidating the same links as the last time someone asked me this question.    </p><p>This post is meant to be my simple, consolidated answer to "How do I get started with Clojure?"    </p><p>Here's how...    </p><h3 id="pick&#95;a&#95;project">Pick a Project</h3><p>Before you do anything else, you really need to pick some simple project you will do in Clojure. In my experience,  attempting to learn something without some concurrent hands-on experience isn't particularly effective. My first  non-trivial (i.e. (prn "Hello World)) application was an implementation of the board game  <a href='https://boardgamegeek.com/boardgame/826/cartagena'>Cartagena</a> that I talked about  at Clojure/conj. You can watch it right here:</p><p><iframe width="640" height="360" src="https://www.youtube.com/embed/Tb823aqgX_0" frameborder="0" allowfullscreen></iframe></p><p>I suggest an application that has some state, whether it be a desktop application or single page web app  (using ClojureScript). That way you can use atoms and understand how Clojure separates the concerns of state  (atoms, agents, or refs), value (data), and transition (functions). I think board games make excellent projects,  but then again I really like board games. You could do just about anything.</p><h3 id="watch&#95;&&#95;read">Watch & Read</h3><p>Here are a few links I recommend to everyone, not in any particular order. They are all excellent.</p><ul><li><a href='http://www.braveclojure.com/'>Clojure for the Brave and True</a>: Daniel Higginbotham's truly awesome book/onlinelearning series on learning Clojure from the ground up. <a href='https://www.amazon.com/Clojure-Brave-True-Ultimate-Programmer/dp/1593275919/ref=as_li_ss_tl?ie=UTF8&linkCode=sl1&tag=braveclojure-20&linkId=e3c6527befc02cce112deb5b8fbc3774'>Buy it here</a>. This is my #1 recommended getting started resource.</li><li><a href='https://clojure.org/reference/evaluation'>Clojure Evaluation</a>: The single most important documentation page on Clojure in the entire universe. Once you understand this page you pretty much know the entire language (not the APIs). Yes, Clojure is this simple.</li><li><a href='https://objectcomputing.com/resources/publications/sett/march-2009-clojure-functional-programming-for-the-jvm/'>Clojure - Functional Programming for the JVM</a>: Mark Volkmann's extremely direct and to the point single web page description of Clojure.</li><li><a href='https://changelog.com/posts/rich-hickeys-greatest-hits'>Rich Hickey's Greatest Hits</a>: Most of these are more philosophical than tutorial in nature, but they give you great insights into the genius behind Clojure. Key concepts such as value, state, identity, etc. are described in these videos. My favorites:<ul><li>Are We There Yet?</li><li>Simple Made Easy</li><li>The Value of Values</li></ul></li></ul><h2 id="in&#95;conclusion">In Conclusion</h2><p>Hopefully the above tips and links will give you a little help if you are considering Clojure and want to know where to  start. Either way, I'll have something to point to next time someone asks me.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/clojure/">clojure</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2016-04-07-tetris/">&laquo; Another Tetris Clone in Clojure</a>
+        
+        
+        <a class="right" href="/posts-output/2015-10-26-concerns/">My Concern with Concerns &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://markbastian.github.io/posts-output/2015-12-01-gettingstarted/";
+            this.page.identifier = "Clojure: Getting Started";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//markbastian.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2017 Mark Bastian
+        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+ <link rel="stylesheet" type="text/css" href=nil>
+<script>
+window.klipse_settings = null;
+</script>
+<script src=nil></script> 
+
+</body>
+</html>

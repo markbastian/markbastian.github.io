@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mark&#39;s Functional Thoughts: Three Reasons You May Not Want to Learn Clojure</title>
+    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-07-22-three/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mark&#39;s Functional Thoughts</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        More <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Links</li>
+                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
+                        
+                        <li><a href="/pages-output/presentations/">Presentations</a></li>
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Recent Posts</li>
+                        
+                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
+                        
+                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
+                        
+                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-11-differences/">Differences between Null, Nil, nil, Some, and None</a></li>
+                        
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Tags</li>
+                        
+                        <li><a href="/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/tags-output/cryogen/">cryogen</a></li>
+                        
+                        <li><a href="/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/tags-output/conway/">conway</a></li>
+                        
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">July 22, 2015</div>
+        
+    </div>
+    <h2>Three Reasons You May Not Want to Learn Clojure</h2>
+</div>
+<div>
+    <ol class="content"><li><a href="#introduction">Introduction</a></li><ol><li><a href="#you_will_write_at_least_10x_less_code_than_your_java_counterparts">You will write at least 10X less code than your Java counterparts</a></li><li><a href="#you_won&apos;t_be_marketable_for_certain_jobs">You won't be marketable for certain jobs</a></li><li><a href="#you_will_get_things_done_faster">You will get things done faster</a></li></ol><li><a href="#conclusion">Conclusion</a></li><ol><li><a href="#shameless_plug">Shameless Plug</a></li></ol></ol>
+     <h2 id="introduction">Introduction</h2><p>I've been coding in Clojure for over a year now and not everything is unicorns and rainbows. Whatever language you choose will affect how you think and work and Clojure is no different. Read on to see what some of these effects are and why you might want to reconsider learning Clojure.  </p><h3 id="you&#95;will&#95;write&#95;at&#95;least&#95;10x&#95;less&#95;code&#95;than&#95;your&#95;java&#95;counterparts">You will write at least 10X less code than your Java counterparts</h3><p>Often, the measure of a library or project is its size. Programmers like to compare the size of their projects, just like muscle car people like to compare the size of their engines. Here are some situations where this might happen:</p><ul><li>Lunch with buddies</li><li>Job interview</li><li>Internal performance evaluation </li></ul><p>Here's a typical conversation:  </p><blockquote><p>You: "Yeah, I just finished delivering the Awesome 2000." </p></blockquote><blockquote><p>Them: "Oh, yeah? Tell me about it." </p></blockquote><blockquote><p>You: "Well, it is this software product that simultaneously creates world peace, solves world hunger, and saves the environment. Zero carbon footprint, too." </p></blockquote><blockquote><p>Them: "Cool, how many lines of code was that?" </p></blockquote><blockquote><p>You: "Oh, like 2 million." </p></blockquote><blockquote><p>Them: "Wow, awesome." </p></blockquote><p>You will now get a high five, a job offer, or a big raise depending on who you are talking with. However, if you stated that the number of lines of code in your product was 200 then the response might be more along the lines of "Oh, a toy program written in a toy language." For some reason, probably because it is easy, many people like to equate lines of code with programming ability rather than some other metric like, oh, I don't know, the actual features of the programs you've developed. Clojure, sadly, excels at implementing features but is very poor at being verbose about it.</p><p>If you want to demonstrate your ability to code by writing lots of it, Clojure is a terrible, horrible, no-good language. I can't think of another language that is worse in this respect. You will never be able to brag again, in an circumstance, about how big your code base is compared to someone else's.</p><h3 id="you&#95;won't&#95;be&#95;marketable&#95;for&#95;certain&#95;jobs">You won't be marketable for certain jobs</h3><p>True Story: Once upon a time I was at a job interview and the interview panel asked me to go up to the board and code up a Fibonacci sequence generator. I asked what language they wanted it in and they said they didn't care, but they were a C++ shop. Since they didn't care, I wrote a very short tail-recursive Scala version which I am sure they found incomprehensible. I used to program in C++ and at one time I think I was quite good at it. However, I am just not that interested in C++ any more. It was a great job interview because I didn't get the job. I am sure that the story would have ended the same had I done the exercise in Clojure, except for the parenthesis would have been in the right place.</p><p>If you want to be a professional Clojure programmer, there will be a smaller number of job openings for someone of your skills and interests than for the standard Java or C# developer. If you are interested in being part of a clone army doing widely-available boring work, Clojure is not for you.</p><h3 id="you&#95;will&#95;get&#95;things&#95;done&#95;faster">You will get things done faster</h3><p>Clojure makes you productive, really productive. So, if you can get a product to market 3-10 times faster than you once could, what does your employer do with all that extra time you just bought them? Fire you and pocket the savings, that's what! Just kidding. Mostly.</p><p>While it is true that a company might take advantage of their newfound savings in cost and time by eliminating the software team that just bought them the savings, the more likely scenario is that 1) they will reapply you to something else; or 2) if they are trimming fat, you aren't part of it. Often you will become the new go-to person for getting things done because you've demonstrated an ability to get things done. This does lead to another problem: You have too much work to do because you are a productivity magnet.</p><p>While you can't predict what your employer will do in a given situation, one constant you can be sure of in the current software job market is that you must be agile. If you demonstrate value you can be sure that will have the opportunity to continue to demonstrate value. If, on the other hand, you resist change you will eventually be phased out by your own employer or by another company that displaces yours entirely.</p><h2 id="conclusion">Conclusion</h2><p>Yes, Clojure is an enabling and empowering language, but this is not without its down sides. I didn't even get into some of the other issues, like not having the opportunity to rewrite your Java code in JavaScript because Clojure compiles both ways. If these are the kinds of problems you like to deal with, you just might want to give Clojure a try.</p><h3 id="shameless&#95;plug">Shameless Plug</h3><p>Like this blog? Please share, subscribe, or follow it (just enter your email at the top right).</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/scala/">scala</a>
+    
+    <a href="/tags-output/clojure/">clojure</a>
+    
+    <a href="/tags-output/functional programming/">functional programming</a>
+    
+    <a href="/tags-output/clojurescript/">clojurescript</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-08-06-homoiconic/">&laquo; Clojure is Homoiconic, Java is Not</a>
+        
+        
+        <a class="right" href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://markbastian.github.io/posts-output/2015-07-22-three/";
+            this.page.identifier = "Three Reasons You May Not Want to Learn Clojure";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//markbastian.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2017 Mark Bastian
+        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+ <link rel="stylesheet" type="text/css" href=nil>
+<script>
+window.klipse_settings = null;
+</script>
+<script src=nil></script> 
+
+</body>
+</html>

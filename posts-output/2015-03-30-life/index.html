@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mark&#39;s Functional Thoughts: Conway&#39;s Game of Life</title>
+    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-03-30-life/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mark&#39;s Functional Thoughts</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        More <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Links</li>
+                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
+                        
+                        <li><a href="/pages-output/presentations/">Presentations</a></li>
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Recent Posts</li>
+                        
+                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
+                        
+                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
+                        
+                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-11-differences/">Differences between Null, Nil, nil, Some, and None</a></li>
+                        
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Tags</li>
+                        
+                        <li><a href="/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/tags-output/cryogen/">cryogen</a></li>
+                        
+                        <li><a href="/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/tags-output/conway/">conway</a></li>
+                        
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">March 30, 2015</div>
+        
+    </div>
+    <h2>Conway&#39;s Game of Life</h2>
+</div>
+<div>
+    <ol class="content"><li><a href="#the_project">The Project</a></li><li><a href="#the_rules">The Rules</a></li><li><a href="#postmortem">Postmortem</a></li><ol><li><a href="#implementation_in_clojure">Implementation in Clojure</a></li><li><a href="#rules.cljx">rules.cljx</a></li><li><a href="#canvasui.cljx">canvasui.cljx</a></li></ol><li><a href="#in_conclusion">In Conclusion</a></li></ol>
+    <h2 id="the&#95;project">The Project</h2><p>I wanted to create an interesting project in Clojure that had the following features:</p><ul><li>The project should be simple, but interesting</li><li>The project should demonstrate how Clojure, ClojureScript, and cljx interact</li><li>There should be some cool Clojure features to learn about</li><li>I wanted to demonstrate how to achieve state in a stateless world </li></ul><p> I chose to program up Conway's Game of Life, a simple zero-player cellular automaton.   It's a fun little simulation and meets all of my criterion. Here's what it looks like:   </p><p><div> <canvas height="400" id="myCanvas" style="border: 1px solid #000000;" width="400"></canvas> </div> <div> <button id="reset" type="button">Reset</button> </div> <script src="../../js/conway.js"></script></p><h2 id="the&#95;rules">The Rules</h2><ul><li>A living cell with only one or two neighbors dies</li><li>A living cell with two or three live neighbors survives</li><li>A living cell with greater than three neighbors dies</li><li>A dead cell with exactly three neighbors comes to life  </li></ul><h2 id="postmortem">Postmortem</h2><h3 id="implementation&#95;in&#95;clojure">Implementation in Clojure</h3><br /><p>Conway's Game of Life is a cellular automaton in which a population of cells evolves with the following rules: This project was coded up in Clojure as an example of what can be done using the clj/cljs/cljx integration.  It was done in three main files: rules.cljx, swingui.clj, and canvasui.cljs. Below you will find the complete listing  of the rules and canvasui namespaces. the swingui namespace is available via git here.</p><h3 id="rules.cljx">rules.cljx</h3><p>Here's a listing of the entire "rule engine" for the application.</p><pre><code class="clojure">&#40;ns conway.rules&#41;
+
+&#40;defn gen-cell&#91;&#93;&#40;if &#40;&gt; &#40;Math/random&#41; 0.7&#41; :alive :dead&#41;&#41;
+
+&#40;defn seed-grid &#91;rows cols&#93;
+  &#40;vec &#40;take rows &#40;repeatedly
+    &#40;fn &#91;&#93; &#40;vec &#40;take cols &#40;repeatedly gen-cell&#41;&#41;&#41;&#41;&#41;&#41;&#41;&#41;
+
+&#40;defn neighbors &#91;&#91;i j&#93;&#93;
+  &#40;let &#91;x &#40;&#40;juxt inc inc identity dec dec dec identity inc&#41; i&#41;
+        y &#40;&#40;juxt identity inc inc inc identity dec dec dec&#41; j&#41;&#93;
+    &#40;map vector x y&#41;&#41;&#41;
+
+&#40;defn count-neighbors &#91;grid coord&#93;
+  &#40;let &#91;n &#40;map #&#40;get-in grid %&#41; &#40;neighbors coord&#41;&#41;&#93;
+    &#40;count &#40;filter #&#40;= % :alive&#41; n&#41;&#41;&#41;&#41;
+
+&#40;defn sim-step &#91;grid coord&#93;
+  &#40;let &#91;n-live &#40;count-neighbors grid coord&#41;&#93;
+    &#40;if &#40;= :alive &#40;get-in grid coord&#41;&#41;
+      &#40;case n-live
+        &#40;2 3&#41; :alive
+        :dead&#41;
+      &#40;if &#40;= 3 n-live&#41; :alive :dead&#41;&#41;&#41;&#41;
+
+&#40;defn step &#91;grid&#93;
+  &#40;into &#91;&#93; &#40;for &#91;i &#40;range &#40;count grid&#41;&#41;&#93;
+          &#40;into &#91;&#93; &#40;for &#91;j &#40;range &#40;count &#40;get grid i&#41;&#41;&#41;&#93;
+                  &#40;sim-step grid &#91;i j&#93;&#41;&#41;&#41;&#41;&#41;&#41;
+</code></pre><p>Perhaps the most interesting aspect of this project is the amount of code  (and I mean the small amount) written to do this complete implementation.  I am continually amazed as I write more Clojure about the expressiveness  and conciseness of the language. Another thing to point out about this file  is the cljx extension. By using this, I can write code that cross-compiles  to target both the JVM and the browser via JavaScript. Pretty cool, eh?</p><p>Finally, I wanted to point out my favorite function in this program: juxt.  the Clojure juxt function creates a function that performs a sequence of  perations on a single item and returns that result as an indexed data  structure. This is a perfect function for computing the neighbors of a  cell in a grid. This is way better than having 8 sequential function calls  in which you compute steps to the right, upper right, top center, upper  left, and so on.</p><h3 id="canvasui.cljx">canvasui.cljx</h3><p>And here is the complete listing for the canvas UI code.</p><pre><code class="clojure">&#40;ns conway.canvasui
+  &#40;:require &#91;conway.rules :as rules&#93;&#41;&#41;
+
+&#40;defn draw-background &#91;canvas ctx&#93;
+  &#40;doto ctx
+    &#40;&gt; .-fillStyle &#40;set! &quot;#000000&quot;&#41;&#41;
+    &#40;.fillRect 0 0 &#40;.-width canvas&#41; &#40;.-height canvas&#41;&#41;&#41;&#41;
+
+&#40;defn draw-and-update-grid &#91;canvas ctx grid dim&#93;
+  &#40;let &#91;dx &#40;/ &#40;.-width canvas&#41; dim&#41;
+        dy &#40;/ &#40;.-height canvas&#41; dim&#41;&#93;
+    &#40;do
+    &#40;draw-background canvas ctx&#41;
+    &#40;&gt; ctx .-fillStyle &#40;set! &quot;#00FF00&quot;&#41;&#41;
+    &#40;doseq &#91;i &#40;range &#40;count @grid&#41;&#41;&#93;
+      &#40;doseq &#91;j &#40;range &#40;count &#40;get @grid i&#41;&#41;&#41;&#93;
+        &#40;when &#40;= :alive &#40;get-in @grid &#91;i j&#93;&#41;&#41;
+          &#40;.fillRect ctx &#40;&#42; dx i&#41; &#40;&#42; dy j&#41; dx dy&#41;&#41;&#41;&#41;
+    &#40;swap! grid rules/step&#41;&#41;&#41;&#41;
+
+&#40;set!
+  &#40;.-onload js/window&#41;
+  &#40;when &#40;and js/document &#40;.-getElementById js/document&#41;&#41;
+    &#40;let &#91;cells 50
+          grid &#40;atom &#40;rules/seed-grid cells cells&#41;&#41;
+          canvas &#40;.getElementById js/document &quot;myCanvas&quot;&#41;
+          reset-button &#40;.getElementById js/document &quot;reset&quot;&#41;
+          ctx &#40;.getContext canvas &quot;2d&quot;&#41;&#93;
+      &#40;do
+        &#40;js/setInterval
+          #&#40;draw-and-update-grid canvas ctx grid cells&#41; 10&#41;
+        &#40;set! &#40;.-onclick reset-button&#41;
+          #&#40;reset! grid &#40;rules/seed-grid cells cells&#41;&#41;&#41;&#41;&#41;&#41;&#41;
+</code></pre><p>Again, it is amazing how few lines of code were written for this demo.</p><p>Finally, take a look at how state is managed in the program. Notice that  there are no defs (global variables within the namespace) anywhere. All   of the state is managed by a single atom (line 25) that is created within    the initialization section of the script and is passed to each function.    The draw-and-update-grid function draws and updates the grid    (as you might expect) while the reset button is used to reset the grid.    Since atoms are synchronous, I don't need to worry about any sort of    concurrency problems. It just works.</p><p>This is a very common pattern in the Clojure world for designing  applications. You have three elements:   </p><ol><li>A set of rules that can be thought of as an API or DSL for your project. These rules consist only of defns or perhaps defs that define constants.  They are used to transform or analyze a model. They are completely stateless.</li><li>A very small number of Clojure concurrency primitives that manage the actual state of the application. In this case, there is only 1 - the grid atom. You  might have other primitives, such as one for preferences, but the number should  be small and separated by concerns.</li><li>A user interface layer. It could be Swing, an HTML app using ClojureScript, or just a repl. </li></ol><p>Coming from a background in 10+ years of Java and then about 6 years of Scala,  this was something it took me a while to understand, but now I can't live without.   When I got deep into Scala I really loved it, but had the hardest time figuring out   how to manage state. With Clojure everything is just baked in.  </p><h2 id="in&#95;conclusion">In Conclusion</h2> <p> I was able to write up a simple cross-platform application in just a handful of   lines of code using the amazing powers of Clojure, ClojureScript, and the cljx project.   Despite its simplicity, there are some great things to learn from the project.    If you want to see the entire project, check it out <a href='https://github.com/markbastian/conway'>here</a>    or my entire github repo <a href='https://github.com/markbastian'>here</a>.    I hope you enjoyed this project and short postmortem.  </p><p> If you liked this page or learned anything from it, please tweet the link and/or follow   me on Twitter. I hope to have other projects like this in the future, and your support   and interest is the fuel that drives the effort.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/clojure/">clojure</a>
+    
+    <a href="/tags-output/juxt/">juxt</a>
+    
+    <a href="/tags-output/conway/">conway</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-03-31-juxt/">&laquo; Using juxt to Compute Signed Angular Distances</a>
+        
+        
+        <a class="right" href="/posts-output/2000-01-01-docs/">Quick Start Guide &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://markbastian.github.io/posts-output/2015-03-30-life/";
+            this.page.identifier = "Conway&#39;s Game of Life";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//markbastian.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2017 Mark Bastian
+        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+ <link rel="stylesheet" type="text/css" href=nil>
+<script>
+window.klipse_settings = null;
+</script>
+<script src=nil></script> 
+
+</body>
+</html>

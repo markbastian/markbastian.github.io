@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mark&#39;s Functional Thoughts: Using juxt to Compute Signed Angular Distances</title>
+    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-03-31-juxt/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mark&#39;s Functional Thoughts</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        More <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Links</li>
+                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
+                        
+                        <li><a href="/pages-output/presentations/">Presentations</a></li>
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Recent Posts</li>
+                        
+                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
+                        
+                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
+                        
+                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-11-differences/">Differences between Null, Nil, nil, Some, and None</a></li>
+                        
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Tags</li>
+                        
+                        <li><a href="/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/tags-output/cryogen/">cryogen</a></li>
+                        
+                        <li><a href="/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/tags-output/conway/">conway</a></li>
+                        
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">March 31, 2015</div>
+        
+    </div>
+    <h2>Using juxt to Compute Signed Angular Distances</h2>
+</div>
+<div>
+    
+    <p>Juxt is one of those weird Clojure functions that just doesn't make sense until you see it in action. However, once you get it, you love it. This short example shows a great use of the juxt function.</p><p>What does juxt do? It creates a function that is the application of a list of functions to a single argument. In simpler terms, a typical function returns one result for one input. In the case of juxt, you create a function that returns n results for one input. The n results are computed from the n functions that you juxtapose.</p><p>For example, suppose you need both the cosine and sine x for a given application. You could create two separate variables, like so:</p><pre><code class="clojure">&#40;defn angle-&gt;cartesian
+&quot;Convert an angle &#40;in radians&#41; to its cartesian vector equivalent.&quot;
+  &#91;theta&#93;
+  &#40;let&#91;x &#40;Math/cos theta&#41;
+       y &#40;Math/sin theta&#41;&#93;
+    &#91;x y&#93;&#41;&#41;
+</code></pre><p>However, it is more convenient to juxtapose (set side by side) the two items being computed into a single vector.</p><p>Here's a problem that builds on the above to show how nice juxt is:</p><p>You are given two angles in degrees and need to compute the signed distance between them. These angles aren't constrained to [0, 360). If the angles are outside of this range, we want to use the equivalent angle within the desired range. Here are a few examples of the desired output:</p><table><thead><tr><th align='center'>First Angle</th><th align='center'>Second Angle</th><th align='center'>Signed Distance</th></tr></thead><tbody><tr><td align='center'>10</td><td align='center'>20</td><td align='center'>10</td></tr><tr><td align='center'>20</td><td align='center'>10</td><td align='center'>-10</td></tr><tr><td align='center'>350</td><td align='center'>10</td><td align='center'>20</td></tr><tr><td align='center'>10</td><td align='center'>350</td><td align='center'>-20</td></tr><tr><td align='center'>-350</td><td align='center'>350</td><td align='center'>-20</td></tr><tr><td align='center'>350</td><td align='center'>-350</td><td align='center'>20</td></tr></tbody></table><p>You can probably solve this problem with some combination of mod, rem, and/or quot, but I find it much easier to simply transform the angles to their cartesian vector form and do the math in that coordinate system. Recall that for unit vectors the dot product of vectors A and B is A*B=cos(θ), where θ is the angle between the vectors. Likewise, the sign of the cross product of the vectors indicates the the direction of rotation via the right hand rule. So, I can use dot to compute my angular offset and cross to determine the direction.</p><p>With that knowledge, here's my function to compute angular distances: </p><pre><code class="clojure">&#40;defn angular-delta
+&quot;Compute the difference between two angles, 
+where angles are in degrees.&quot;
+&#91;a b&#93;
+&#40;let &#91;&#91;u v&#93; &#40;map &#40;juxt #&#40;Math/cos %&#41; #&#40;Math/sin %&#41;&#41;
+                 &#40;map #&#40;Math/toRadians %&#41; &#91;a b&#93;&#41;&#41;
+      theta &#40;Math/acos &#40;reduce + &#40;map &#42; u v&#41;&#41;&#41;
+      sign &#40;Math/signum &#40;reduce - &#40;map &#42; u &#40;reverse v&#41;&#41;&#41;&#41;&#93;
+  &#40;Math/toDegrees &#40;&#42; sign theta&#41;&#41;&#41;&#41;
+</code></pre><p>Pretty slick, eh? Notice how the combination of juxt and destructuring (the automagic mapping of the result to the [x y] vector) both shortened my code and created a single vector structure, which communicated my intent. As an afterthought, let me state that I am only converting to degrees since they are easier on the eyes for most humans. In the real world, I'd leave the function in terms of radians since, in the words of my favorite college math professor, "Degrees are for temperature, radians are for math."</p><p>Does this all give the right answer? Let the REPL decide:</p><pre><code class="clojure">&#40;defn angular-delta
+  &quot;Compute the difference between two angles, 
+  where angles are in degrees.&quot;
+  &#91;a b&#93;
+  &#40;let &#91;&#91;u v&#93; &#40;map &#40;juxt #&#40;Math/cos %&#41; #&#40;Math/sin %&#41;&#41;
+                   &#40;map #&#40;Math/toRadians %&#41; &#91;a b&#93;&#41;&#41;
+        theta &#40;Math/acos &#40;reduce + &#40;map &#42; u v&#41;&#41;&#41;
+        sign &#40;Math/signum &#40;reduce - &#40;map &#42; u &#40;reverse v&#41;&#41;&#41;&#41;&#93;
+    &#40;Math/toDegrees &#40;&#42; sign theta&#41;&#41;&#41;&#41;
+=&gt; #'user/angular-delta
+&#40;angular-delta 10 20&#41;
+=&gt; 10.000000000000012
+&#40;angular-delta 20 10&#41;
+=&gt; -10.000000000000012
+&#40;angular-delta 350 10&#41;
+=&gt; 20.00000000000001
+&#40;angular-delta 10 350&#41;
+=&gt; -20.00000000000001
+&#40;angular-delta -350 350&#41;
+=&gt; -20.00000000000001
+&#40;angular-delta 350 -350&#41;
+=&gt; 20.00000000000001
+</code></pre><p>Ignoring the precision issues, this gives just the right answer.</p><p>I hope this provides a nice explanation of how you might use juxt in a real problem. There are many other similar cases where you need to compute several independent variations of an initial value to perform a computation. Whenever you need do to this, use juxt.</p><p>If you liked this page or learned anything from it, please tweet the link and/or follow me on Twitter. Your support and interest is the fuel that drives the effort.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/clojure/">clojure</a>
+    
+    <a href="/tags-output/juxt/">juxt</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-04-11-mazes/">&laquo; A-maze-ing Mazes with Clojure</a>
+        
+        
+        <a class="right" href="/posts-output/2015-03-30-life/">Conway&#39;s Game of Life &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://markbastian.github.io/posts-output/2015-03-31-juxt/";
+            this.page.identifier = "Using juxt to Compute Signed Angular Distances";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//markbastian.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2017 Mark Bastian
+        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+ <link rel="stylesheet" type="text/css" href=nil>
+<script>
+window.klipse_settings = null;
+</script>
+<script src=nil></script> 
+
+</body>
+</html>

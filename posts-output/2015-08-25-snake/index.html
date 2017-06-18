@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mark&#39;s Functional Thoughts: A Clojure Snake Game</title>
+    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-08-25-snake/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mark&#39;s Functional Thoughts</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        More <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Links</li>
+                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
+                        
+                        <li><a href="/pages-output/presentations/">Presentations</a></li>
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Recent Posts</li>
+                        
+                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
+                        
+                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
+                        
+                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
+                        
+                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2015-06-11-differences/">Differences between Null, Nil, nil, Some, and None</a></li>
+                        
+                        
+
+                        
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Tags</li>
+                        
+                        <li><a href="/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/tags-output/cryogen/">cryogen</a></li>
+                        
+                        <li><a href="/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/tags-output/conway/">conway</a></li>
+                        
+                        
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">August 25, 2015</div>
+        
+    </div>
+    <h2>A Clojure Snake Game</h2>
+</div>
+<div>
+    <ol class="content"><li><a href="#introduction">Introduction</a></li><li><a href="#the_program">The Program</a></li><ol><li><a href="#observations_and_comments">Observations and Comments</a></li><ol><li><a href="#other_minor_details:">Other minor details:</a></li></ol></ol><li><a href="#conclusion">Conclusion</a></li></ol>
+     <h2 id="introduction">Introduction</h2><p>I recently decided to write a Snake game in Clojure as a small project. In the game you have a snake that grows as it consumes food. The goal of the game is to make the snake as long as possible without self-intersecting. I got the idea to do it on a Saturday morning and by that night I was done. Most of the coding was done in the evening since I was doing family activities all day. All told, this was probably a 3 hour project. The entire program is 75 lines of code. That's awesome! This includes both the JVM and JavaScript targets via Clojure and ClojureScript. Here's the game:</p><p><div class="container"> <canvas height="400" id="snake-canvas" style="border: 1px solid #000000;" width="400"></canvas> <script src="../../js/snake.js"></script> <script type="text/javascript">snake.core.launch_app(document.getElementById("snake-canvas"), 400, 400);</script> </div></p><p>Here's how you play:</p><ol><li>Use your arrow keys or w, a, s, d to change the snake's direction. Note that you probably will need to click on the canvas first to gain focus.</li><li>When the snake hits a green "food" pill it grows one unit longer.</li><li>When the snake intersects itself it resets to its original length.Your score is the length of your snake.</li></ol><h2 id="the&#95;program">The Program</h2><p>Here's the program. Read past it for my observations and comments.</p><pre><code class="clojure">&#40;ns snake.core
+  &#40;:require &#91;quil.core :as q #?@&#40;:cljs &#91;:include-macros true&#93;&#41;&#93;
+            &#91;quil.middleware :as m&#93;&#41;&#41;
+
+&#40;def world { :width 100 :height 100 :food-amount 1000 }&#41;
+
+&#40;defn gen-food &#91;&#93; &#91;&#40;rand-int &#40;world :width&#41;&#41; &#40;rand-int &#40;world :width&#41;&#41;&#93;&#41;
+
+&#40;defn replenish-food &#91;initial amount&#93;
+  &#40;loop &#91;food initial&#93; &#40;if &#40;&gt;= &#40;count food&#41; amount&#41; food &#40;recur &#40;conj food &#40;gen-food&#41;&#41;&#41;&#41;&#41;&#41;
+
+&#40;defn wrap &#91;i m&#93;
+  &#40;loop &#91;x i&#93; &#40;cond &#40;&lt; x 0&#41; &#40;recur &#40;+ x m&#41;&#41; &#40;&gt;= x m&#41; &#40;recur &#40;- x m&#41;&#41; :else x&#41;&#41;&#41;
+
+&#40;defn grow-snake &#91;{:keys &#91;snake velocity&#93; :as state}&#93;
+  &#40;let &#91;&#91;px py&#93; &#40;map + &#40;peek snake&#41; velocity&#41;&#93;
+    &#40;assoc state :snake &#40;conj snake &#91;&#40;wrap px &#40;world :width&#41;&#41; &#40;wrap py &#40;world :height&#41;&#41;&#93;&#41;&#41;&#41;&#41;
+
+&#40;defn eat &#91;{:keys &#91;snake food&#93; :as state}&#93;
+  &#40;if-let &#91;pellet &#40;food &#40;peek snake&#41;&#41;&#93;
+    &#40;-&gt; state &#40;update :food disj pellet&#41;&#41;
+    &#40;-&gt; state &#40;update :snake subvec 1&#41;&#41;&#41;&#41;
+
+&#40;defn reset? &#91;{:keys &#91;snake&#93; :as state}&#93;
+  &#40;if &#40;apply distinct? snake&#41;
+    state
+    &#40;assoc state :snake &#91;&#40;peek snake&#41;&#93;&#41;&#41;&#41;
+
+&#40;defn setup &#91;&#93;
+  &#40;do &#40;q/smooth&#41;
+      &#40;q/frame-rate 30&#41;
+      {:snake &#91;&#91;50 50&#93;&#93; :velocity &#91;1 0&#93; :food &#40;replenish-food #{} &#40;world :food-amount&#41;&#41;}&#41;&#41;
+
+&#40;defn draw &#91;{ :keys &#91;snake food&#93; }&#93;
+  &#40;let &#91;w &#40;/ &#40;q/width&#41; &#40;world :width&#41;&#41;
+        h &#40;/ &#40;q/height&#41; &#40;world :height&#41;&#41;&#93;
+    &#40;do
+      &#40;q/smooth&#41;
+      &#40;q/stroke-cap :round&#41;
+      &#40;q/stroke-join :round&#41;
+      &#40;q/background 0 0 0&#41;
+
+      &#40;q/fill 0 255 0&#41;
+      &#40;q/stroke 0 255 0&#41;
+      &#40;doseq &#91;&#91;x y&#93; food&#93;&#40;q/rect &#40;&#42; w x&#41; &#40;&#42; h y&#41; w h&#41;&#41;
+
+      &#40;q/fill 255 0 0&#41;
+      &#40;q/stroke 255 0 0&#41;
+      &#40;doseq &#91;&#91;x y&#93; snake&#93;&#40;q/rect &#40;&#42; w x&#41; &#40;&#42; h y&#41; w h&#41;&#41;
+
+      &#40;q/fill 0 255 255&#41;
+      &#40;q/text &#40;str &quot;Score: &quot; &#40;count snake&#41;&#41; 10 15&#41;&#41;&#41;&#41;
+
+&#40;defn launch-sketch &#91;{:keys&#91;width height host&#93;}&#93;
+  &#40;q/sketch
+    :title &quot;Snake&quot;
+    :setup setup
+    :update #&#40;-&gt; % grow-snake eat &#40;update :food replenish-food &#40;world :food-amount&#41;&#41; reset?&#41;
+    :draw draw
+    :key-pressed
+    &#40;fn &#91;{ :keys &#91;velocity&#93; :as state} { :keys &#91;key key-code&#93; }&#93;
+      &#40;case key
+        &#40;:a :left&#41; &#40;if &#40;not= &#91;1 0&#93; velocity&#41; &#40;assoc state :velocity &#91;-1 0&#93;&#41; state&#41;
+        &#40;:d :right&#41; &#40;if &#40;not= &#91;-1 0&#93; velocity&#41; &#40;assoc state :velocity &#91;1 0&#93;&#41; state&#41;
+        &#40;:w :up&#41; &#40;if &#40;not= &#91;0 1&#93; velocity&#41; &#40;assoc state :velocity &#91;0 -1&#93;&#41; state&#41;
+        &#40;:s :down&#41; &#40;if &#40;not= &#91;0 -1&#93; velocity&#41; &#40;assoc state :velocity &#91;0 1&#93;&#41; state&#41;
+        state&#41;&#41;
+    :middleware &#91;m/fun-mode&#93;
+    :size &#91;width height&#93;
+    #?@&#40;:cljs &#91;:host host&#93;&#41;&#41;&#41;
+
+;#?&#40;:clj &#40;launch-sketch { :width 400 :height 400 }&#41;&#41;
+
+#?&#40;:cljs &#40;defn &#94;:export launch-app&#91;host width height&#93;
+           &#40;launch-sketch { :width width :height height :host host}&#41;&#41;&#41;
+</code></pre><h3 id="observations&#95;and&#95;comments">Observations and Comments</h3><p>The state in this program is represented by a simple data structure containing a vector describing the snake, a vector representing the snake's velocity, and a set of coordinates representing the locations of food. You can see where I create this at the end of the setup function.There are also some constants in the world def.</p><p>To update the state, this program makes use of the common Clojure pattern of "threading state." Basically, you write your functions so that program state is passed in as an argument and a modified, updated version of the program state is returned. Functions with a single action or concern are written in this manner and then chained to form more complicated behaviors. It makes your program very easy to reason about. In this program you can see where this is done in the update method:</p><p><code>#&#40;-&gt; % grow-snake eat &#40;update :food replenish-food &#40;world :food-amount&#41;&#41; reset?&#41;</code></p><p>For those unfamiliar with Clojure, I am using the "thread first" macro (The arrow). The # creates an anonymous function with the % as the passed in argument. The arrow takes the argument and feeds it through each function in succession (grow-snake, then eat, then updating food, and so on.).</p><p>At the program level, the Quil library handles passing state to each relevant function for processing. In "fun-mode" (functional mode), Quil functions hand you the initial state for modification in methods for program setup, update, and input. For drawing, state is passed in and there is no function output since you will draw your state to the screen. In other applications you can follow this same pattern of state management using Clojure's amazing concurrency primitives (atoms, agents, and refs). In fact Quil is just using an atom under the hood.</p><h4 id="other&#95;minor&#95;details:">Other minor details:</h4><ul><li>There's a commented out form (;#?(:clj (launch-sketch { :width 400 :height 400 }))) towards the end. Uncomment this if you want to launch the file from a REPL. I leave it commented so that it doesn't launch when I do a cljsbuild.</li><li>For some reason, the (:gen-class) directive doesn't seem to have any effect in the cljc file, so I have a separate launcher.clj that defines a main method for uberjar builds. Clone the project if you want to see what I mean.You can clone the project <a href='https://github.com/markbastian/snake'>here</a>. </li></ul><h2 id="conclusion">Conclusion</h2><p>Clojure continues to amaze me by repeatedly enabling me to do so much in such a small amount to time and code. Simple ideas, such as representing your domain as data structures vs. classes and the ability to thread your state throughout your program via functions make development in Clojure rapid and productive. Nowadays, whenever I get an itch to try out a new program or concept, I just sit down and model the domain as data and then start writing functions to manipulate the data. Before I know it, I end up with a complete program. It's a very powerful and fun way to write applications. </p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/clojure/">clojure</a>
+    
+    <a href="/tags-output/functional programming/">functional programming</a>
+    
+    <a href="/tags-output/clojurescript/">clojurescript</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-09-24-state-mgmt/">&laquo; Clojure State Management by Example</a>
+        
+        
+        <a class="right" href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_config = function () {
+            this.page.url = "https://markbastian.github.io/posts-output/2015-08-25-snake/";
+            this.page.identifier = "A Clojure Snake Game";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//markbastian.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2017 Mark Bastian
+        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+ <link rel="stylesheet" type="text/css" href=nil>
+<script>
+window.klipse_settings = null;
+</script>
+<script src=nil></script> 
+
+</body>
+</html>
