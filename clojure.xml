@@ -12,11 +12,162 @@ https://markbastian.github.io
 Thoughts on Clojure, Functional Programming, and the like
 </description>
 <lastBuildDate>
-Mon, 19 Jun 2017 22:53:10 -0600
+Mon, 10 Jul 2017 23:58:04 -0600
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+https://markbastian.github.io/posts-output/2017-07-10-polymacro/
+</guid>
+<link>
+https://markbastian.github.io/posts-output/2017-07-10-polymacro/
+</link>
+<title>
+A Polynomial Macro
+</title>
+<description>
+&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;&lt;p&gt;In this edition of the blog I am going to cover a very cool macro for conveniently defining polynomials that is also very performant. It's also a great example of how macros work and when you might want to use one.&lt;/p&gt;&lt;h2 id=&quot;polynomials&quot;&gt;Polynomials&lt;/h2&gt;&lt;p&gt;In mathematics, a polynomial is a function of the form:&lt;/p&gt;&lt;p&gt;\(p(x) = a_0 + a_1x + a_2x ^2 + a_3x ^3 + \dotsb + a_nx ^n\)&lt;/p&gt;&lt;p&gt;This particular representation is called the &lt;i&gt;canonical form&lt;/i&gt;.&lt;/p&gt;&lt;p&gt;Evaluating a polynomial in canonical form takes n additions and \(\frac{(n ^2 + n)}{2}\) multiplications.&lt;/p&gt;&lt;p&gt;A more efficient form of expressing the same polynomial is the &lt;a href=&quot;https://reference.wolfram.com/language/ref/HornerForm.html&quot;&gt;Horner form&lt;/a&gt;, which takes only n additions and multiplications:&lt;/p&gt;&lt;p&gt;\(p(x) = a_0 + x(a_1 + x(a_2 + \dotsb + x(a_{n-1} + a_nx)))\)&lt;/p&gt;&lt;p&gt;In Clojure, here is how you'd write a polynomial in both canonical and Horner forms:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(ns poly.core$macros
+  (:require [cljs.js :as cljs]))
+
+(defn poly-canonical [t]
+  (+ 134.96340251  
+     (* t 477198.8675605) 
+     (* t t 0.0088553) 
+     (* t t t 1.4343E-5)))
+
+(defn poly-horner [t]
+  (+ 134.96340251
+     (*
+       (+ 477198.8675605
+          (* 
+            (+ 0.0088553
+               (* 1.4343E-5 t)) 
+            t)) 
+       t)))
+
+;Either form gives the same result
+[(poly-canonical 0.0426236319) (poly-horner 0.0426236319)]
+ &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I believe the canonical form is easer to read and code, but the Horner form should run faster as there are less operations involved. In this case, n is only 3, so there are 9 arithmetic operations for the canonical formula and 6 for the Horner. If you were to profile them you'd probably not see any distinguishable difference between the two.&lt;/p&gt;&lt;p&gt;You should see larger differences in performance with higher n, but at this point in the post I have no way to create a large polynomial other than hand coding it, so I'll defer that task for now.&lt;/p&gt;&lt;p&gt;As for demonstrating the relative performance of the functions I'll be developing, we'll use the &lt;code&gt;rank&lt;/code&gt; function below.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(defn time-fn[n-samples f]
+(let[t0 (.now js/performance)
+     _ (dotimes[_ n-samples] (f))]
+  (- (.now js/performance) t0)))
+  
+(defn normalize-scores [res]
+  (let[[[_ b ] :as v] (sort-by second res)]
+        (mapv (fn[[k v]] [k (/ v b)]) v)))
+
+(defn rank[n &amp;amp; args]
+  (loop[[k f &amp;amp; r] args res []]
+    (if (and k f)
+      (recur r (conj res [k (time-fn n f)]))
+      (normalize-scores res))))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now that we've got our comparison function, let's try it out:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(rank
+  1000 
+  :canonical #(poly-canonical 0.0426236319)
+  :horner #(poly-horner 0.0426236319))
+ &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Take some time to play around with the number of samples here. I've intentionally used lower numbers in this post so the klipse workspace won't take forever to load. You will likely see the Horner form slightly outperform the canonical method for large sample sizes, but sometimes you may see the canonical form do better. Remember, the order of this polynomial is pretty low and the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Performance/now&quot;&gt;&lt;code&gt;(.now js/performance)&lt;/code&gt; method is only accurate to 5 μs&lt;/a&gt;, so take the exact ranking with a grain of salt. We really won't see large relative differences until we start using larger samples and compare functions with much larger performance differences.&lt;/p&gt;&lt;p&gt;Either way, it's kind of kludgy to type out each polynomial by hand and the process can be error prone. You need to make sure you type everything in correctly, get the term ordering right, and so on. This particular polynomial has all positive coefficients which makes transcription easier, but many polynomials have both positive and negative coefficients. When this happens, you need to exercise care to not mess up the signs along with transcribing all of the digits correctly, too.&lt;/p&gt;&lt;p&gt;It would be much easier to just express your polynomials as a sequence of coefficients that are used as a function argument, like this:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;;See the footnote if you want to know where these numbers come from.
+(def c [134.96340251 477198.8675605 0.0088553 1.4343E-5])
+ &lt;/code&gt;&lt;/pre&gt; &lt;p&gt;By defining the coefficients independently of polynomial evaluation or generation your only concern when defining a new polynomial is getting the coefficients correct. Furthermore, this is a good storage format. Suppose you had coefficient data in Excel. All you'd need to do is copy and paste into a vector. No hand coding of polynomials required.&lt;/p&gt;&lt;p&gt;Here are corresponding functions for evaluating a polynomial given a coefficient vector. Interestingly (and conveniently), the more efficient Horner form is also simpler to code.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;;Evaluation in canonical form.
+(defn eval-canonical [t cs]
+  ;Not sure which is a better canonical implementation here (for comparison purposes)
+  ;Simpler, but does pow actually do i multiplies under the covers 
+  ;(since I am trying to reproduce the behavior of the equation above)?
+  ;(reduce + (map-indexed (fn[i c](* c (Math/pow t i))) cs))
+  ;Guaranteed i operations for true comparison purposes, but more 'stuff' to make it happen
+  (reduce + (map-indexed (fn[i c] (apply * (cons c (repeat i t)))) cs)))
+      
+;Horner polynomial evaluation
+(defn eval-horner [t c]
+  (reduce #(+ (* t %1) %2) (rseq c)))
+
+;Define functions for convenience
+(defn poly-canonical-coefficients [t]
+  (eval-canonical t c))
+
+(defn poly-horner-coefficients [t]
+  (eval-horner t c))
+
+[(poly-canonical-coefficients 0.0426236319)
+ (poly-horner-coefficients 0.0426236319) ]
+ &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let's see how our new implementations perform against the fully expanded versions:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(rank
+  1000
+  :canonical #(poly-canonical 0.0426236319)
+  :horner #(poly-horner 0.0426236319)
+  :canonical-coefficients #(poly-canonical-coefficients 0.0426236319)
+  :horner-coefficients #(poly-horner-coefficients 0.0426236319))
+ &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Again, take some time to play around with the number of samples. I see results along these lines:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;The manually-coded functions are effectively in a race condition for the baseline position.&lt;/li&gt;&lt;li&gt;The &lt;code&gt;:horner-coefficients&lt;/code&gt; version is around 2-3X slower than the baseline.&lt;/li&gt;&lt;li&gt;The &lt;code&gt;:canonical-coefficients&lt;/code&gt; version is around 5-6X or 15-20X slower than the baseline depending on which version you used (The &lt;code&gt;Math/pow&lt;/code&gt; version is faster).&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;It would take some more analysis to see exactly what makes the last version slower (The number of arithmetic operations, the number of functions called, etc.), but that's beyond the scope of this post. The main point is that the Horner evaluator is still pretty good, but not as fast as something hand-unrolled. At this point, if you had a large polynomial you were evaluating you might well prefer using &lt;code&gt;eval-horner&lt;/code&gt; to manually coding the equation.&lt;/p&gt;&lt;h2 id=&quot;enter_macros&quot;&gt;Enter Macros&lt;/h2&gt;&lt;p&gt;What if there was a way to both express a polynomial compactly and efficiently while also getting the performance of the manual expansion? Luckily for us, Clojure macros allow us to do just this.&lt;/p&gt;&lt;p&gt;Here are our macros and supporting eval function:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;;Note that we need to define our own eval function so that we can evaluate our macro args. 
+;This is NOT required if you are doing this exercise in Clojure as eval is already part of core.
+;See http://blog.klipse.tech/clojurescript/2016/04/04/self-host-part-1.html for details.
+(defn eval [exp]
+  (:value (cljs/eval-str cljs.env/*compiler*
+                  (str exp)
+                  &quot;&quot;
+                  {:eval cljs/js-eval :context :expr :ns 'poly.core$macros}
+                  identity)))
+      
+(defmacro canonical-expand [terms]
+  (let [t# (eval terms)]
+    `(fn [~'t]
+       (+ ~@(for [i (range (count t#)) :let [c (t# i)]]
+              `(* ~c ~@(repeat i 't)))))))
+
+(defmacro horner-expand [terms]
+  (let [t# (rseq (eval terms))]
+    `(fn [~'t]
+     ~(reduce (fn [b a] `(+ ~a (* ~b ~'t))) t#))))
+
+(defmacro defpoly [n terms]
+  `(def n (horner-expand ~terms)))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The expansion macros take a vector of coefficients and fully expand the equation into the desired form as an anonymous function. I evaluate the terms so that vectors of coefficients can be passed in from predefined vars or functions rather than inlined numerical vectors. The &lt;code&gt;defpoly&lt;/code&gt; macro is provided for convenience. You can see the macro expansions right here:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;;Macro expansion of simply polynomial in canonical form
+(macroexpand '(poly.core/canonical-expand [1 2 3]))
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;;Macro expansion of simply polynomial in horner form
+(macroexpand '(poly.core/horner-expand [1 2 3]))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we can create functions using these macros:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(def poly-canonical-macro 
+  (poly.core/canonical-expand [134.96340251 477198.8675605 0.0088553 1.4343E-5]))
+  
+(def poly-horner-macro 
+  (poly.core/horner-expand [134.96340251 477198.8675605 0.0088553 1.4343E-5]))
+  
+[(poly-canonical-macro 0.0426236319)
+ (poly-horner-macro 0.0426236319)]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, let's see how our macro-generated functions perform compared to our previous results:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(rank
+  1000
+  :canonical #(poly-canonical 0.0426236319)
+  :horner #(poly-horner 0.0426236319)
+  :canonical-coefficients #(poly-canonical-coefficients 0.0426236319)
+  :horner-coefficients #(poly-horner-coefficients 0.0426236319)
+  :canonical-macro #(poly-canonical-macro 0.0426236319)
+  :horner-macro #(poly-horner-macro 0.0426236319))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You should see effectively identical results between the original hand-written functions and the new macro versions, with the coefficient evaluation versions lagging behind as before. You've now got the best of both worlds: a concise way to express your polynomial that is also performant. &lt;/p&gt;&lt;h2 id=&quot;big_polynomials&quot;&gt;Big Polynomials&lt;/h2&gt;&lt;p&gt;Up to this point, we've established that hand-unrolling a polynomial is faster (not always by a lot) than writing an evaluator using higher-order functions (e.g. &lt;code&gt;eval-horner&lt;/code&gt;). We've also established that you can do the unroll automatically by writing a clever macro, achieving the best of both worlds. Until now, the theoretically slower canonical polynomial examples haven't really been much slower, if at all, than the Horner form.&lt;/p&gt;&lt;p&gt;However, what happens when large polynomials come into play? In the general case, is Horner form that much better than canonical form? A motivating example is the power series expansions for e&lt;sup&gt;x,&lt;/sup&gt; sin, cos, and other transcendental functions.&lt;/p&gt;&lt;p&gt;Consider the power series expansion for e&lt;sup&gt;x:&lt;/sup&gt;&lt;/p&gt;&lt;p&gt;\(e ^x = 1 + x + \frac{x ^2}{2!} + \frac{x ^3}{3!} + \dotsb \)&lt;/p&gt;&lt;p&gt;For our exercise, we'll create a polynomial series with all coefficients in the power series that don't blow up (Non-infinite denominators).&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;(def e-coefficients 
+  (-&amp;gt;&amp;gt; (iterate (fn [[i f]] [(inc i) (* i f)]) [1.0 1.0])
+       (map second)
+       (take-while #(js/isFinite %))
+       (mapv #(/ 1.0 %))))
+       
+;Should see 171
+(count e-coefficients) 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, let's create two macro-expanded polynomials and see how they perform:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;klipse-cljs nohighlight&quot;&gt;;Uncomment this at your own peril!!!!!
+;(defonce exp-canonical-macro (poly.core/canonical-expand e-coefficients))
+  
+(defonce exp-horner-macro (poly.core/horner-expand e-coefficients))
+ 
+;This should produce e in both cases.
+;[(exp-canonical-macro 1.0) (exp-horner-macro 1.0)]
+ 
+#_(rank
+  10
+  :canonical-macro #(exp-canonical-macro 1.0)
+  :horner-macro #(exp-horner-macro 1.0)
+  :canonical-eval #(eval-canonical 1.0 e-coefficients)
+  :horner-eval #(eval-horner 1.0 e-coefficients))
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the interest of not hanging your browser, I've commented out the canonical expansion for this example. If you are patient, feel free to uncomment it and wait until it evaluates. Then, uncomment the ranker. if you are extra patient, up the samples to 100.&lt;/p&gt;&lt;p&gt;Here is what you should see after much waiting:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;code&gt;:horner-macro&lt;/code&gt; should be your baseline value.&lt;/li&gt;&lt;li&gt;&lt;code&gt;:horner-eval&lt;/code&gt; should have a similar order of magnitude performance as &lt;code&gt;horner-macro&lt;/code&gt;. I see values in the 2-8X range.&lt;/li&gt;&lt;li&gt;&lt;code&gt;:canonical-macro&lt;/code&gt; should be next. I see values in the 9-30X range.&lt;/li&gt;&lt;li&gt;&lt;code&gt;:caninical-eval&lt;/code&gt; should be worst, by far. I see values in the hundreds.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The actual numeric values should be taken with a grain of salt given the inability to gather a large number of samples and the precision of the timing function, but the overall conclusion should be the same - Horner evaluation (in any form) is much faster than canonical evalution (in any form) for large polynomials.&lt;/p&gt;&lt;p&gt;Note that in a Clojure REPL this runs much faster and is probably a better environment for this kind of experimentation (The canonical macro for e-coefficients still takes a while, though). In fact, when I do this exercise in a REPL and use &lt;a href=&quot;https://github.com/ptaoussanis/tufte&quot;&gt;tufte&lt;/a&gt; for timing, I get these results:&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;../../img/tufte-macros.jpg&quot; alt=&quot;alt text&quot; title=&quot;Polynomial comparisons&quot; /&gt;&lt;/p&gt;&lt;p&gt;Although the numbers are different, the overall rankings and qualitative results are the same.&lt;/p&gt;&lt;p&gt;So, to answer the questions posed at the beginning of the section - Yes, you should use Horner's method, especially with larger polynomials.&lt;/p&gt;&lt;h2 id=&quot;conclusions&quot;&gt;Conclusions&lt;/h2&gt;&lt;p&gt;In this exercise, I explained a couple of ways to evaluate polynomials as well as multiple ways of implementing those methods. Here are the high points:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Horner polynomial evaluation is more efficient than canonical evaluation. However, the Horner form can be a bit ugly to code.&lt;/li&gt;&lt;li&gt;Horner evaluation using a vector of coefficients and reduce is efficient and simple. However, for small polynomials there can be a noticeable difference in speed between using reduce vs. simply hand coding the Horner form.&lt;/li&gt;&lt;li&gt;The &lt;code&gt;horner-expand&lt;/code&gt; macro presented gives the best of both worlds - the performance of a manually-expanded function and the compactness and simplicity of a coefficients vector.&lt;/li&gt;&lt;li&gt;For large polynomials the differences in implementation, especially between Horner and canonical forms, can be dramatic.&lt;/li&gt;&lt;/ul&gt;&lt;h3 id=&quot;a_note_of_thanks&quot;&gt;A Note of Thanks&lt;/h3&gt;&lt;p&gt;When developing this post I was having some trouble getting my eval function working within the klipse environment. Mike Fikes, David Nolen, and others from the community were quick to help me get it working. I'd like to express my thanks to them and the Clojure community in general. We've got a great community that is always willing to help out with any problem or question, and I'm happy and proud to be a part of it.&lt;/p&gt;&lt;h3 id=&quot;footnote&quot;&gt;Footnote&lt;/h3&gt;&lt;p&gt;For this exercise, I've been using terms from the equation describing nutation (a perturbation of the Earth's rotation) due to the Moon. See &quot;Fundamentals of Astrodynamics and Applications&quot; by David Vallado if you want to learn more.&lt;/p&gt;
+</description>
+<pubDate>
+Mon, 10 Jul 2017 00:00:00 -0600
+</pubDate>
+</item>
 <item>
 <guid>
 https://markbastian.github.io/posts-output/2017-06-19-clojure-rising/
