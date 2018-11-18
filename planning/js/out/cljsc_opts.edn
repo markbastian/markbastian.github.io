@@ -1,0 +1,1 @@
+{:main planning.app, :asset-path "js/out", :output-to "resources/public/js/planning.js", :output-dir "resources/public/js/out", :source-map-timestamp true, :pretty-print true, :optimizations :none, :preloads [figwheel.connect], :external-config #:figwheel{:config {:build-id "dev", :websocket-url "ws://localhost:3449/figwheel-ws"}}}
