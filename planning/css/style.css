@@ -2,6 +2,7 @@ html {
   position: fixed;
   height: 100%;
   overflow: hidden;
+  touch-action: none;
 }
 
 body {
@@ -9,5 +10,6 @@ body {
   height: 100vh;
   overflow-y: scroll;
   overflow-x: hidden;
+  touch-action: none;
   -webkit-overflow-scrolling: touch;
 }
