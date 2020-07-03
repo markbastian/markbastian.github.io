@@ -120,6 +120,8 @@
        (map :prime)
        (filter identity)))
 </code></pre><p>This solution does not suffer from the limitations of the old one. Give it a shot in a REPL.</p><pre><code class="language-clojure">(comment
+  (take 10 prime-seq2)
+  ;=&gt; (2 3 5 7 11 13 17 19 23 29)
   (take 10000 prime-seq2)
   (nth prime-seq2 10000))
 </code></pre><p>One protip is that you can turn any loop-recur into an iterate by converting the loop bindings into a map. This separates the concerns of iteration, stepping, and termination. This is exceptionally useful for both reasoning about your code as well as creating small, reusable pieces of functionality that can be handled in different ways (e.g. use the same seq to get the nth prime vs. n primes).</p><h4>The Fibonacci Sequence</h4><p>I can use the same iterate strategy for other sequences. Here's a solution for the Fibonacci sequence.</p><pre><code class="language-clojure">(def fib-seq
