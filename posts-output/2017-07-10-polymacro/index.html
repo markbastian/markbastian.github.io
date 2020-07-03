@@ -3,36 +3,31 @@
 <head>
     <meta charset="utf-8"/>
     <title>(conj community thoughts): A Polynomial Macro</title>
-    <link rel="canonical" href="https://markbastian.github.io/posts-output/2017-07-10-polymacro/">
+    
+<meta name="keywords" content="seq,scala,quil,clojure,differential equations,iterate,sequences,java,math,laziness,functional programming,mazes,concurrency,numerical analysis,juxt,clojurescript,conway,defmacro">
+
+<meta name="description" content="IntroductionIn this edition of the blog I am going to cover a very cool macro for conveniently defining polynomials that is also very performant. It&#39;s also a great example of how macros work and when you might want to use one.">
+
+<meta property="og:description" content="IntroductionIn this edition of the blog I am going to cover a very cool macro for conveniently defining polynomials that is also very performant. It&#39;s also a great example of how macros work and when you might want to use one.">
+
+<meta property="og:url" content="https://markbastian.github.io/blog/posts-output/2017-07-10-polymacro/" />
+<meta property="og:title" content="A Polynomial Macro" />
+<meta property="og:type" content="article" />
+
+    <link rel="canonical" href="https://markbastian.github.io/blog/posts-output/2017-07-10-polymacro/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
-          type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700" rel="stylesheet"
+          type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
     <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-    <!--For Google Analytics-->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-89196403-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
-    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -43,96 +38,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">(conj community thoughts)</a>
+            <a class="navbar-brand" href="/blog/">(conj community thoughts)</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li ><a href="/">Home</a></li>
+                <li ><a href="/blog/">Home</a></li>
                 <li
-                ><a href="/archives/">Archives</a></li>
+                ><a href="/blog/archives/">Archives</a></li>
                 
                 <li
                 >
-                <a href="/pages-output/about/">About</a>
+                <a href="/blog/pages-output/about/">About</a>
                 </li>
                 
-                <li><a href="/feed.xml">RSS</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        More <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-header">Links</li>
-                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
-                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
-                        
-                        <li><a href="/pages-output/presentations/">Presentations</a></li>
-                        
-                        <li><a href="/pages-output/projects/">Projects</a></li>
-                        
-                        <li><a href="/pages-output/links/">Links</a></li>
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Recent Posts</li>
-                        
-                        <li><a href="/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
-                        
-                        <li><a href="/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
-                        
-                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
-                        
-                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
-                        
-                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
-                        
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Tags</li>
-                        
-                        <li><a href="/tags-output/scala/">scala</a></li>
-                        
-                        <li><a href="/tags-output/quil/">quil</a></li>
-                        
-                        <li><a href="/tags-output/clojure/">clojure</a></li>
-                        
-                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
-                        
-                        <li><a href="/tags-output/java/">java</a></li>
-                        
-                        <li><a href="/tags-output/math/">math</a></li>
-                        
-                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
-                        
-                        <li><a href="/tags-output/mazes/">mazes</a></li>
-                        
-                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
-                        
-                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
-                        
-                        <li><a href="/tags-output/juxt/">juxt</a></li>
-                        
-                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
-                        
-                        <li><a href="/tags-output/conway/">conway</a></li>
-                        
-                        <li><a href="/tags-output/defmacro/">defmacro</a></li>
-                        
-                        
-                    </ul>
-                </li>
+                <li><a href="/blog/feed.xml">RSS</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
@@ -140,10 +59,8 @@
 
 
 <div class="container">
-
-
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-9">
             <div id="content">
                 
 <div id="post">
@@ -155,8 +72,8 @@
     <h2>A Polynomial Macro</h2>
 </div>
 <div>
-    <ol class="content"><li><a href="#introduction">Introduction</a></li><ol><li><a href="#polynomials">Polynomials</a></li><li><a href="#enter_macros">Enter Macros</a></li><li><a href="#big_polynomials">Big Polynomials</a></li><li><a href="#conclusions">Conclusions</a></li><ol><li><a href="#a_note_of_thanks">A Note of Thanks</a></li><li><a href="#footnote">Footnote</a></li></ol></ol></ol>
-    <h1 id="introduction">Introduction</h1><p>In this edition of the blog I am going to cover a very cool macro for conveniently defining polynomials that is also very performant. It's also a great example of how macros work and when you might want to use one.</p><h2 id="polynomials">Polynomials</h2><p>In mathematics, a polynomial is a function of the form:</p><p>\(p(x) = a_0 + a_1x + a_2x ^2 + a_3x ^3 + \dotsb + a_nx ^n\)</p><p>This particular representation is called the <i>canonical form</i>.</p><p>Evaluating a polynomial in canonical form takes n additions and \(\frac{(n ^2 + n)}{2}\) multiplications.</p><p>A more efficient form of expressing the same polynomial is the <a href="https://reference.wolfram.com/language/ref/HornerForm.html">Horner form</a>, which takes only n additions and multiplications:</p><p>\(p(x) = a_0 + x(a_1 + x(a_2 + \dotsb + x(a_{n-1} + a_nx)))\)</p><p>In Clojure, here is how you'd write a polynomial in both canonical and Horner forms:</p><pre><code class="klipse-cljs nohighlight">(ns poly.core$macros
+    
+    <h1>Introduction</h1><p>In this edition of the blog I am going to cover a very cool macro for conveniently defining polynomials that is also very performant. It's also a great example of how macros work and when you might want to use one.</p><h2>Polynomials</h2><p>In mathematics, a polynomial is a function of the form:</p><p>\(p(x) = a_0 + a_1x + a_2x ^2 + a_3x ^3 + \dotsb + a_nx ^n\)</p><p>This particular representation is called the <em>canonical form</em>.</p><p>Evaluating a polynomial in canonical form takes n additions and \(\frac{(n ^2 + n)}{2}\) multiplications.</p><p>A more efficient form of expressing the same polynomial is the <a href="https://reference.wolfram.com/language/ref/HornerForm.html">Horner form</a>, which takes only n additions and multiplications:</p><p>\(p(x) = a_0 + x(a_1 + x(a_2 + \dotsb + x(a_{n-1} + a_nx)))\)</p><p>In Clojure, here is how you'd write a polynomial in both canonical and Horner forms:</p><pre><code class="language-klipse-cljs">(ns poly.core$macros
   (:require [cljs.js :as cljs]))
 
 (defn poly-canonical [t]
@@ -177,7 +94,7 @@
 
 ;Either form gives the same result
 [(poly-canonical 0.0426236319) (poly-horner 0.0426236319)]
- </code></pre><p>I believe the canonical form is easer to read and code, but the Horner form should run faster as there are less operations involved. In this case, n is only 3, so there are 9 arithmetic operations for the canonical formula and 6 for the Horner. If you were to profile them you'd probably not see any distinguishable difference between the two.</p><p>You should see larger differences in performance with higher n, but at this point in the post I have no way to create a large polynomial other than hand coding it, so I'll defer that task for now.</p><p>As for demonstrating the relative performance of the functions I'll be developing, we'll use the <code>rank</code> function below.</p><pre><code class="klipse-cljs nohighlight">(defn time-fn[n-samples f]
+</code></pre><p>I believe the canonical form is easer to read and code, but the Horner form should run faster as there are less operations involved. In this case, n is only 3, so there are 9 arithmetic operations for the canonical formula and 6 for the Horner. If you were to profile them you'd probably not see any distinguishable difference between the two.</p><p>You should see larger differences in performance with higher n, but at this point in the post I have no way to create a large polynomial other than hand coding it, so I'll defer that task for now.</p><p>As for demonstrating the relative performance of the functions I'll be developing, we'll use the <code>rank</code> function below.</p><pre><code class="language-klipse-cljs">(defn time-fn[n-samples f]
 (let[t0 (.now js/performance)
      _ (dotimes[_ n-samples] (f))]
   (- (.now js/performance) t0)))
@@ -191,13 +108,13 @@
     (if (and k f)
       (recur r (conj res [k (time-fn n f)]))
       (normalize-scores res))))
-</code></pre><p>Now that we've got our comparison function, let's try it out:</p><pre><code class="klipse-cljs nohighlight">(rank
+</code></pre><p>Now that we've got our comparison function, let's try it out:</p><pre><code class="language-klipse-cljs">(rank
   1000 
   :canonical #(poly-canonical 0.0426236319)
   :horner #(poly-horner 0.0426236319))
- </code></pre><p>Take some time to play around with the number of samples here. I've intentionally used lower numbers in this post so the klipse workspace won't take forever to load. You will likely see the Horner form slightly outperform the canonical method for large sample sizes, but sometimes you may see the canonical form do better. Remember, the order of this polynomial is pretty low and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/now"><code>(.now js/performance)</code> method is only accurate to 5 μs</a>, so take the exact ranking with a grain of salt. We really won't see large relative differences until we start using larger samples and compare functions with much larger performance differences.</p><p>Either way, it's kind of kludgy to type out each polynomial by hand and the process can be error prone. You need to make sure you type everything in correctly, get the term ordering right, and so on. This particular polynomial has all positive coefficients which makes transcription easier, but many polynomials have both positive and negative coefficients. When this happens, you need to exercise care to not mess up the signs along with transcribing all of the digits correctly, too.</p><p>It would be much easier to just express your polynomials as a sequence of coefficients that are used as a function argument, like this:</p><pre><code class="klipse-cljs nohighlight">;See the footnote if you want to know where these numbers come from.
+</code></pre><p>Take some time to play around with the number of samples here. I've intentionally used lower numbers in this post so the klipse workspace won't take forever to load. You will likely see the Horner form slightly outperform the canonical method for large sample sizes, but sometimes you may see the canonical form do better. Remember, the order of this polynomial is pretty low and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/now"><code>(.now js/performance)</code> method is only accurate to 5 μs</a>, so take the exact ranking with a grain of salt. We really won't see large relative differences until we start using larger samples and compare functions with much larger performance differences.</p><p>Either way, it's kind of kludgy to type out each polynomial by hand and the process can be error prone. You need to make sure you type everything in correctly, get the term ordering right, and so on. This particular polynomial has all positive coefficients which makes transcription easier, but many polynomials have both positive and negative coefficients. When this happens, you need to exercise care to not mess up the signs along with transcribing all of the digits correctly, too.</p><p>It would be much easier to just express your polynomials as a sequence of coefficients that are used as a function argument, like this:</p><pre><code class="language-klipse-cljs">;See the footnote if you want to know where these numbers come from.
 (def c [134.96340251 477198.8675605 0.0088553 1.4343E-5])
- </code></pre> <p>By defining the coefficients independently of polynomial evaluation or generation your only concern when defining a new polynomial is getting the coefficients correct. Furthermore, this is a good storage format. Suppose you had coefficient data in Excel. All you'd need to do is copy and paste into a vector. No hand coding of polynomials required.</p><p>Here are corresponding functions for evaluating a polynomial given a coefficient vector. Interestingly (and conveniently), the more efficient Horner form is also simpler to code.</p><pre><code class="klipse-cljs nohighlight">;Evaluation in canonical form.
+</code></pre><p>By defining the coefficients independently of polynomial evaluation or generation your only concern when defining a new polynomial is getting the coefficients correct. Furthermore, this is a good storage format. Suppose you had coefficient data in Excel. All you'd need to do is copy and paste into a vector. No hand coding of polynomials required.</p><p>Here are corresponding functions for evaluating a polynomial given a coefficient vector. Interestingly (and conveniently), the more efficient Horner form is also simpler to code.</p><pre><code class="language-klipse-cljs">;Evaluation in canonical form.
 (defn eval-canonical [t cs]
   ;Not sure which is a better canonical implementation here (for comparison purposes)
   ;Simpler, but does pow actually do i multiplies under the covers 
@@ -219,13 +136,13 @@
 
 [(poly-canonical-coefficients 0.0426236319)
  (poly-horner-coefficients 0.0426236319) ]
- </code></pre><p>Let's see how our new implementations perform against the fully expanded versions:</p><pre><code class="klipse-cljs nohighlight">(rank
+</code></pre><p>Let's see how our new implementations perform against the fully expanded versions:</p><pre><code class="language-klipse-cljs">(rank
   1000
   :canonical #(poly-canonical 0.0426236319)
   :horner #(poly-horner 0.0426236319)
   :canonical-coefficients #(poly-canonical-coefficients 0.0426236319)
   :horner-coefficients #(poly-horner-coefficients 0.0426236319))
- </code></pre><p>Again, take some time to play around with the number of samples. I see results along these lines:</p><ul><li>The manually-coded functions are effectively in a race condition for the baseline position.</li><li>The <code>:horner-coefficients</code> version is around 2-3X slower than the baseline.</li><li>The <code>:canonical-coefficients</code> version is around 5-6X or 15-20X slower than the baseline depending on which version you used (The <code>Math/pow</code> version is faster).</li></ul><p>It would take some more analysis to see exactly what makes the last version slower (The number of arithmetic operations, the number of functions called, etc.), but that's beyond the scope of this post. The main point is that the Horner evaluator is still pretty good, but not as fast as something hand-unrolled. At this point, if you had a large polynomial you were evaluating you might well prefer using <code>eval-horner</code> to manually coding the equation.</p><h2 id="enter_macros">Enter Macros</h2><p>What if there was a way to both express a polynomial compactly and efficiently while also getting the performance of the manual expansion? Luckily for us, Clojure macros allow us to do just this.</p><p>Here are our macros and supporting eval function:</p><pre><code class="klipse-cljs nohighlight">;Note that we need to define our own eval function so that we can evaluate our macro args. 
+</code></pre><p>Again, take some time to play around with the number of samples. I see results along these lines:</p><ul><li>The manually-coded functions are effectively in a race condition for the baseline position.</li><li>The <code>:horner-coefficients</code> version is around 2-3X slower than the baseline.</li><li>The <code>:canonical-coefficients</code> version is around 5-6X or 15-20X slower than the baseline depending on which version you used (The <code>Math/pow</code> version is faster).</li></ul><p>It would take some more analysis to see exactly what makes the last version slower (The number of arithmetic operations, the number of functions called, etc.), but that's beyond the scope of this post. The main point is that the Horner evaluator is still pretty good, but not as fast as something hand-unrolled. At this point, if you had a large polynomial you were evaluating you might well prefer using <code>eval-horner</code> to manually coding the equation.</p><h2>Enter Macros</h2><p>What if there was a way to both express a polynomial compactly and efficiently while also getting the performance of the manual expansion? Luckily for us, Clojure macros allow us to do just this.</p><p>Here are our macros and supporting eval function:</p><pre><code class="language-klipse-cljs">;Note that we need to define our own eval function so that we can evaluate our macro args. 
 ;This is NOT required if you are doing this exercise in Clojure as eval is already part of core.
 ;See http://blog.klipse.tech/clojurescript/2016/04/04/self-host-part-1.html for details.
 (defn eval [exp]
@@ -248,11 +165,11 @@
 
 (defmacro defpoly [n terms]
   `(def n (horner-expand ~terms)))
-</code></pre><p>The expansion macros take a vector of coefficients and fully expand the equation into the desired form as an anonymous function. I evaluate the terms so that vectors of coefficients can be passed in from predefined vars or functions rather than inlined numerical vectors. The <code>defpoly</code> macro is provided for convenience. You can see the macro expansions right here:</p><pre><code class="klipse-cljs nohighlight">;Macro expansion of simply polynomial in canonical form
+</code></pre><p>The expansion macros take a vector of coefficients and fully expand the equation into the desired form as an anonymous function. I evaluate the terms so that vectors of coefficients can be passed in from predefined vars or functions rather than inlined numerical vectors. The <code>defpoly</code> macro is provided for convenience. You can see the macro expansions right here:</p><pre><code class="language-klipse-cljs">;Macro expansion of simply polynomial in canonical form
 (macroexpand '(poly.core/canonical-expand [1 2 3]))
-</code></pre><pre><code class="klipse-cljs nohighlight">;Macro expansion of simply polynomial in horner form
+</code></pre><pre><code class="language-klipse-cljs">;Macro expansion of simply polynomial in horner form
 (macroexpand '(poly.core/horner-expand [1 2 3]))
-</code></pre><p>Now we can create functions using these macros:</p><pre><code class="klipse-cljs nohighlight">(def poly-canonical-macro 
+</code></pre><p>Now we can create functions using these macros:</p><pre><code class="language-klipse-cljs">(def poly-canonical-macro 
   (poly.core/canonical-expand [134.96340251 477198.8675605 0.0088553 1.4343E-5]))
   
 (def poly-horner-macro 
@@ -260,7 +177,7 @@
   
 [(poly-canonical-macro 0.0426236319)
  (poly-horner-macro 0.0426236319)]
-</code></pre><p>Now, let's see how our macro-generated functions perform compared to our previous results:</p><pre><code class="klipse-cljs nohighlight">(rank
+</code></pre><p>Now, let's see how our macro-generated functions perform compared to our previous results:</p><pre><code class="language-klipse-cljs">(rank
   1000
   :canonical #(poly-canonical 0.0426236319)
   :horner #(poly-horner 0.0426236319)
@@ -268,7 +185,7 @@
   :horner-coefficients #(poly-horner-coefficients 0.0426236319)
   :canonical-macro #(poly-canonical-macro 0.0426236319)
   :horner-macro #(poly-horner-macro 0.0426236319))
-</code></pre><p>You should see effectively identical results between the original hand-written functions and the new macro versions, with the coefficient evaluation versions lagging behind as before. You've now got the best of both worlds: a concise way to express your polynomial that is also performant. </p><h2 id="big_polynomials">Big Polynomials</h2><p>Up to this point, we've established that hand-unrolling a polynomial is faster (not always by a lot) than writing an evaluator using higher-order functions (e.g. <code>eval-horner</code>). We've also established that you can do the unroll automatically by writing a clever macro, achieving the best of both worlds. Until now, the theoretically slower canonical polynomial examples haven't really been much slower, if at all, than the Horner form.</p><p>However, what happens when large polynomials come into play? In the general case, is Horner form that much better than canonical form? A motivating example is the power series expansions for e<sup>x,</sup> sin, cos, and other transcendental functions.</p><p>Consider the power series expansion for e<sup>x:</sup></p><p>\(e ^x = 1 + x + \frac{x ^2}{2!} + \frac{x ^3}{3!} + \dotsb \)</p><p>For our exercise, we'll create a polynomial series with all coefficients in the power series that don't blow up (Non-infinite denominators).</p><pre><code class="klipse-cljs nohighlight">(def e-coefficients 
+</code></pre><p>You should see effectively identical results between the original hand-written functions and the new macro versions, with the coefficient evaluation versions lagging behind as before. You've now got the best of both worlds: a concise way to express your polynomial that is also performant.</p><h2>Big Polynomials</h2><p>Up to this point, we've established that hand-unrolling a polynomial is faster (not always by a lot) than writing an evaluator using higher-order functions (e.g. <code>eval-horner</code>). We've also established that you can do the unroll automatically by writing a clever macro, achieving the best of both worlds. Until now, the theoretically slower canonical polynomial examples haven't really been much slower, if at all, than the Horner form.</p><p>However, what happens when large polynomials come into play? In the general case, is Horner form that much better than canonical form? A motivating example is the power series expansions for e^x, sin, cos, and other transcendental functions.</p><p>Consider the power series expansion for e^x:</p><p>\(e ^x = 1 + x + \frac{x ^2}{2!} + \frac{x ^3}{3!} + \dotsb \)</p><p>For our exercise, we'll create a polynomial series with all coefficients in the power series that don't blow up (Non-infinite denominators).</p><pre><code class="language-klipse-cljs">(def e-coefficients 
   (-&gt;&gt; (iterate (fn [[i f]] [(inc i) (* i f)]) [1.0 1.0])
        (map second)
        (take-while #(js/isFinite %))
@@ -276,7 +193,7 @@
        
 ;Should see 171
 (count e-coefficients) 
-</code></pre><p>Now, let's create two macro-expanded polynomials and see how they perform:</p><pre><code class="klipse-cljs nohighlight">;Uncomment this at your own peril!!!!!
+</code></pre><p>Now, let's create two macro-expanded polynomials and see how they perform:</p><pre><code class="language-klipse-cljs">;Uncomment this at your own peril!!!!!
 ;(defonce exp-canonical-macro (poly.core/canonical-expand e-coefficients))
   
 (defonce exp-horner-macro (poly.core/horner-expand e-coefficients))
@@ -290,27 +207,29 @@
   :horner-macro #(exp-horner-macro 1.0)
   :canonical-eval #(eval-canonical 1.0 e-coefficients)
   :horner-eval #(eval-horner 1.0 e-coefficients))
-</code></pre><p>In the interest of not hanging your browser, I've commented out the canonical expansion for this example. If you are patient, feel free to uncomment it and wait until it evaluates. Then, uncomment the ranker. if you are extra patient, up the samples to 100.</p><p>Here is what you should see after much waiting:</p><ul><li><code>:horner-macro</code> should be your baseline value.</li><li><code>:horner-eval</code> should have a similar order of magnitude performance as <code>horner-macro</code>. I see values in the 2-8X range.</li><li><code>:canonical-macro</code> should be next. I see values in the 9-30X range.</li><li><code>:caninical-eval</code> should be worst, by far. I see values in the hundreds.</li></ul><p>The actual numeric values should be taken with a grain of salt given the inability to gather a large number of samples and the precision of the timing function, but the overall conclusion should be the same - Horner evaluation (in any form) is much faster than canonical evalution (in any form) for large polynomials.</p><p>Note that in a Clojure REPL this runs much faster and is probably a better environment for this kind of experimentation (The canonical macro for e-coefficients still takes a while, though). In fact, when I do this exercise in a REPL and use <a href="https://github.com/ptaoussanis/tufte">tufte</a> for timing, I get these results:</p><p><img src="../../img/tufte-macros.jpg" alt="alt text" title="Polynomial comparisons" /></p><p>Although the numbers are different, the overall rankings and qualitative results are the same.</p><p>So, to answer the questions posed at the beginning of the section - Yes, you should use Horner's method, especially with larger polynomials.</p><h2 id="conclusions">Conclusions</h2><p>In this exercise, I explained a couple of ways to evaluate polynomials as well as multiple ways of implementing those methods. Here are the high points:</p><ul><li>Horner polynomial evaluation is more efficient than canonical evaluation. However, the Horner form can be a bit ugly to code.</li><li>Horner evaluation using a vector of coefficients and reduce is efficient and simple. However, for small polynomials there can be a noticeable difference in speed between using reduce vs. simply hand coding the Horner form.</li><li>The <code>horner-expand</code> macro presented gives the best of both worlds - the performance of a manually-expanded function and the compactness and simplicity of a coefficients vector.</li><li>For large polynomials the differences in implementation, especially between Horner and canonical forms, can be dramatic.</li></ul><h3 id="a_note_of_thanks">A Note of Thanks</h3><p>When developing this post I was having some trouble getting my eval function working within the klipse environment. Mike Fikes, David Nolen, and others from the community were quick to help me get it working. I'd like to express my thanks to them and the Clojure community in general. We've got a great community that is always willing to help out with any problem or question, and I'm happy and proud to be a part of it.</p><h3 id="footnote">Footnote</h3><p>For this exercise, I've been using terms from the equation describing nutation (a perturbation of the Earth's rotation) due to the Moon. See "Fundamentals of Astrodynamics and Applications" by David Vallado if you want to learn more.</p>
+</code></pre><p>In the interest of not hanging your browser, I've commented out the canonical expansion for this example. If you are patient, feel free to uncomment it and wait until it evaluates. Then, uncomment the ranker. if you are extra patient, up the samples to 100.</p><p>Here is what you should see after much waiting:</p><ul><li><code>:horner-macro</code> should be your baseline value.</li><li><code>:horner-eval</code> should have a similar order of magnitude performance as <code>horner-macro</code>. I see values in the 2-8X range.</li><li><code>:canonical-macro</code> should be next. I see values in the 9-30X range.</li><li><code>:caninical-eval</code> should be worst, by far. I see values in the hundreds.</li></ul><p>The actual numeric values should be taken with a grain of salt given the inability to gather a large number of samples and the precision of the timing function, but the overall conclusion should be the same - Horner evaluation (in any form) is much faster than canonical evalution (in any form) for large polynomials.</p><p>Note that in a Clojure REPL this runs much faster and is probably a better environment for this kind of experimentation (The canonical macro for e-coefficients still takes a while, though). In fact, when I do this exercise in a REPL and use <a href="https://github.com/ptaoussanis/tufte">tufte</a> for timing, I get these results:</p><p><img src="../../img/tufte-macros.jpg" alt="alt text" title="Polynomial comparisons" /></p><p>Although the numbers are different, the overall rankings and qualitative results are the same.</p><p>So, to answer the questions posed at the beginning of the section - Yes, you should use Horner's method, especially with larger polynomials.</p><h2>Conclusions</h2><p>In this exercise, I explained a couple of ways to evaluate polynomials as well as multiple ways of implementing those methods. Here are the high points:</p><ul><li>Horner polynomial evaluation is more efficient than canonical evaluation. However, the Horner form can be a bit ugly to code.</li><li>Horner evaluation using a vector of coefficients and reduce is efficient and simple. However, for small polynomials there can be a noticeable difference in speed between using reduce vs. simply hand coding the Horner form.</li><li>The <code>horner-expand</code> macro presented gives the best of both worlds - the performance of a manually-expanded function and the compactness and simplicity of a coefficients vector.</li><li>For large polynomials the differences in implementation, especially between Horner and canonical forms, can be dramatic.</li></ul><h3>A Note of Thanks</h3><p>When developing this post I was having some trouble getting my eval function working within the klipse environment. Mike Fikes, David Nolen, and others from the community were quick to help me get it working. I'd like to express my thanks to them and the Clojure community in general. We've got a great community that is always willing to help out with any problem or question, and I'm happy and proud to be a part of it.</p><h3>Footnote</h3><p>For this exercise, I've been using terms from the equation describing nutation (a perturbation of the Earth's rotation) due to the Moon. See "Fundamentals of Astrodynamics and Applications" by David Vallado if you want to learn more.</p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags-output/clojure/">clojure</a>
+    <a href="/blog/tags-output/clojure/">clojure</a>
     
-    <a href="/tags-output/math/">math</a>
+    <a href="/blog/tags-output/math/">math</a>
     
-    <a href="/tags-output/clojurescript/">clojurescript</a>
+    <a href="/blog/tags-output/clojurescript/">clojurescript</a>
     
-    <a href="/tags-output/defmacro/">defmacro</a>
+    <a href="/blog/tags-output/defmacro/">defmacro</a>
     
 </div>
 
 
     <div id="prev-next">
         
+        <a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">&laquo; Clojure and The Joy of Seqs</a>
         
-        <a class="right" href="/posts-output/2017-06-19-clojure-rising/">Clojure Rising &raquo;</a>
+        
+        <a class="right" href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising &raquo;</a>
         
     </div>
 
@@ -318,7 +237,7 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_config = function () {
-            this.page.url = "https://markbastian.github.io/posts-output/2017-07-10-polymacro/";
+            this.page.url = "https://markbastian.github.io/blog/posts-output/2017-07-10-polymacro/";
             this.page.identifier = "A Polynomial Macro";
         };
         (function() {
@@ -334,15 +253,92 @@
 
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Links</h3>
+                <ul id="links">
+<!--                    <li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+<!--                    <li><a href="https://carmen.la/blog/archives/">Carmen's Blog</a></li>-->
+                    
+                    <li><a href="/blog/pages-output/presentations/">Presentations</a></li>
+                    
+                    <li><a href="/blog/pages-output/projects/">Projects</a></li>
+                    
+                    <li><a href="/blog/pages-output/links/">Links</a></li>
+                    
+                </ul>
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">Clojure and The Joy of Seqs</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/seq/">seq</a></li>
+                        
+                        <li><a href="/blog/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/blog/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/blog/tags-output/iterate/">iterate</a></li>
+                        
+                        <li><a href="/blog/tags-output/sequences/">sequences</a></li>
+                        
+                        <li><a href="/blog/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/blog/tags-output/math/">math</a></li>
+                        
+                        <li><a href="/blog/tags-output/laziness/">laziness</a></li>
+                        
+                        <li><a href="/blog/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/blog/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/blog/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/blog/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/blog/tags-output/conway/">conway</a></li>
+                        
+                        <li><a href="/blog/tags-output/defmacro/">defmacro</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <h3>Social</h3>
+                <p><a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="true">Follow @mark_bastian</a></p>
+                <p><a class="github-button" href="https://github.com/markbastian" data-size="large" data-show-count="true" aria-label="Follow @markbastian on GitHub">Follow @markbastian</a></p>
+                <p><script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script></p>
+            </div>
+        </div>
     </div>
-    <footer>Copyright &copy; 2018 Mark Bastian
-        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
-        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+    <footer>Copyright &copy; 2020 Mark Bastian
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
  <link rel="stylesheet" type="text/css" href="/css/codemirror.css">
 <script>

@@ -3,36 +3,45 @@
 <head>
     <meta charset="utf-8"/>
     <title>(conj community thoughts): Differences between Null, Nil, nil, Some, and None</title>
-    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-06-11-differences/">
+    
+<meta name="keywords" content="seq,scala,quil,clojure,differential equations,iterate,sequences,java,math,laziness,functional programming,mazes,concurrency,numerical analysis,juxt,clojurescript,conway,defmacro">
+
+<meta name="description" content="IntroductionDuring a recent code review, a coworker who had the good fortune of jumping straight from
+Java to Clojure was asking me a few questions about some Scala code she&#39;d been asked to edit.
+The particular problem involved recursive accumulation of some list data and our conversation
+drifted towards some questions regarding the different-yet-similar-sounding terms in these JVM
+languages. Java, Scala, and Clojure together have Null, Nil, nil, Some, and None. Most of these
+are related in their respective languages to how exceptional behaviors are handled with respect
+to references and/or collections. Here I explain each of these from the perspective of their host
+languages and my opinion of the effectiveness of each solution.">
+
+<meta property="og:description" content="IntroductionDuring a recent code review, a coworker who had the good fortune of jumping straight from
+Java to Clojure was asking me a few questions about some Scala code she&#39;d been asked to edit.
+The particular problem involved recursive accumulation of some list data and our conversation
+drifted towards some questions regarding the different-yet-similar-sounding terms in these JVM
+languages. Java, Scala, and Clojure together have Null, Nil, nil, Some, and None. Most of these
+are related in their respective languages to how exceptional behaviors are handled with respect
+to references and/or collections. Here I explain each of these from the perspective of their host
+languages and my opinion of the effectiveness of each solution.">
+
+<meta property="og:url" content="https://markbastian.github.io/blog/posts-output/2015-06-11-differences/" />
+<meta property="og:title" content="Differences between Null, Nil, nil, Some, and None" />
+<meta property="og:type" content="article" />
+
+    <link rel="canonical" href="https://markbastian.github.io/blog/posts-output/2015-06-11-differences/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
-          type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700" rel="stylesheet"
+          type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
     <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-    <!--For Google Analytics-->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-89196403-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
-    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -43,96 +52,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">(conj community thoughts)</a>
+            <a class="navbar-brand" href="/blog/">(conj community thoughts)</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li ><a href="/">Home</a></li>
+                <li ><a href="/blog/">Home</a></li>
                 <li
-                ><a href="/archives/">Archives</a></li>
+                ><a href="/blog/archives/">Archives</a></li>
                 
                 <li
                 >
-                <a href="/pages-output/about/">About</a>
+                <a href="/blog/pages-output/about/">About</a>
                 </li>
                 
-                <li><a href="/feed.xml">RSS</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        More <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-header">Links</li>
-                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
-                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
-                        
-                        <li><a href="/pages-output/presentations/">Presentations</a></li>
-                        
-                        <li><a href="/pages-output/projects/">Projects</a></li>
-                        
-                        <li><a href="/pages-output/links/">Links</a></li>
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Recent Posts</li>
-                        
-                        <li><a href="/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
-                        
-                        <li><a href="/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
-                        
-                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
-                        
-                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
-                        
-                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
-                        
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Tags</li>
-                        
-                        <li><a href="/tags-output/scala/">scala</a></li>
-                        
-                        <li><a href="/tags-output/quil/">quil</a></li>
-                        
-                        <li><a href="/tags-output/clojure/">clojure</a></li>
-                        
-                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
-                        
-                        <li><a href="/tags-output/java/">java</a></li>
-                        
-                        <li><a href="/tags-output/math/">math</a></li>
-                        
-                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
-                        
-                        <li><a href="/tags-output/mazes/">mazes</a></li>
-                        
-                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
-                        
-                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
-                        
-                        <li><a href="/tags-output/juxt/">juxt</a></li>
-                        
-                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
-                        
-                        <li><a href="/tags-output/conway/">conway</a></li>
-                        
-                        <li><a href="/tags-output/defmacro/">defmacro</a></li>
-                        
-                        
-                    </ul>
-                </li>
+                <li><a href="/blog/feed.xml">RSS</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
@@ -140,10 +73,8 @@
 
 
 <div class="container">
-
-
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-9">
             <div id="content">
                 
 <div id="post">
@@ -155,93 +86,155 @@
     <h2>Differences between Null, Nil, nil, Some, and None</h2>
 </div>
 <div>
-    <ol class="content"><li><a href="#introduction">Introduction</a></li><ol><li><a href="#java">Java</a></li><li><a href="#scala">Scala</a></li><li><a href="#clojure">Clojure</a></li></ol><li><a href="#conclusion">Conclusion</a></li></ol>
-    <h2 id="introduction">Introduction</h2><p>During a recent code review, a coworker who had the good fortune of jumping straight from  Java to Clojure was asking me a few questions about some Scala code she'd been asked to edit.  The particular problem involved recursive accumulation of some list data and our conversation  drifted towards some questions regarding the different-yet-similar-sounding terms in these JVM  languages. Java, Scala, and Clojure together have Null, Nil, nil, Some, and None. Most of these  are related in their respective languages to how exceptional behaviors are handled with respect  to references and/or collections. Here I explain each of these from the perspective of their host  languages and my opinion of the effectiveness of each solution.    </p><p>Before diving in, let me be clear that null exists in all JVM languages, including Scala and  Clojure. However, these and other more modern languages provide additional facilities for dealing  with situations where Java would default to using null and/or throw NPEs. </p><h3 id="java">Java</h3><p>In Java, you may encounter null when using an uninitialized reference (the default value for all references is null), when attempting to get a collection element that doesn't exist, or when  someone decides to return null from their function to indicate a bad result. Java has no special  handling for null. If you try doing anything with a null value, you get a NullPointerException  and all is lost.    </p><p>Not only is trying to do something with null exceptionally bad, Java (pre 8) has no built-in  mechanisms to help you out. You just do lots of null checking.</p><p>Here are some methods for dealing with null in Java:</p><ul><li>Always check your references. Liberally spread if(foo != null){ /<em>Do stuff with foo here</em>/ }everywhere you don't have absolute control of your references and aren't absolutely sure foo is initialized.</li><li>Always initialize your references at declaration or (preferably) make them final.Effective Java Item #15 says "Minimize Mutability." I find it very hard to be effective when writing Java, but this is definitely a good tip. Whenever possible, make everything final with a meaningful (i.e. non-null) value.</li><li>Don't write your code in Java. There are some perfectly good alternatives (See below).& Use the new Optional class from Java 8. This is the similar to Scala's Option type so I won't say much here aside from saying that Scala had it first. There's a trend there.</li></ul><h3 id="scala">Scala</h3><p>Recognizing the evils of null and NullPointerExceptions, Scala designed a better way -  the Option type. Rather than returning null when something goes bad, the Scala way is to  return either Some value if the computation succeeded or None if it failed. Here is an  example of how you might use Option types to model a random food grab into your refrigerator:</p><pre><code class="scala">  /&#42;&#42;
-   &#42; A really lame function that might return a random food.
-   &#42;/
+    
+    <h2>Introduction</h2><p>During a recent code review, a coworker who had the good fortune of jumping straight from
+Java to Clojure was asking me a few questions about some Scala code she'd been asked to edit.
+The particular problem involved recursive accumulation of some list data and our conversation
+drifted towards some questions regarding the different-yet-similar-sounding terms in these JVM
+languages. Java, Scala, and Clojure together have Null, Nil, nil, Some, and None. Most of these
+are related in their respective languages to how exceptional behaviors are handled with respect
+to references and/or collections. Here I explain each of these from the perspective of their host
+languages and my opinion of the effectiveness of each solution.</p><p>Before diving in, let me be clear that null exists in all JVM languages, including Scala and
+Clojure. However, these and other more modern languages provide additional facilities for dealing
+with situations where Java would default to using null and/or throw NPEs.</p><h3>Java</h3><p>In Java, you may encounter null when using an uninitialized reference (the default value for all
+references is null), when attempting to get a collection element that doesn't exist, or when
+someone decides to return null from their function to indicate a bad result. Java has no special
+handling for null. If you try doing anything with a null value, you get a NullPointerException
+and all is lost.</p><p>Not only is trying to do something with null exceptionally bad, Java (pre 8) has no built-in
+mechanisms to help you out. You just do lots of null checking.</p><p>Here are some methods for dealing with null in Java:</p><ul><li>Always check your references. Liberally spread if(foo != null){ /<em>Do stuff with foo here</em>/ }
+everywhere you don't have absolute control of your references and aren't absolutely sure foo is
+initialized.</li><li>Always initialize your references at declaration or (preferably) make them final.
+Effective Java Item #15 says "Minimize Mutability." I find it very hard to be effective when
+writing Java, but this is definitely a good tip. Whenever possible, make everything final with
+a meaningful (i.e. non-null) value.</li><li>Don't write your code in Java. There are some perfectly good alternatives (See below).
+&amp; Use the new Optional class from Java 8. This is the similar to Scala's Option type so
+I won't say much here aside from saying that Scala had it first. There's a trend there.</li></ul><h3>Scala</h3><p>Recognizing the evils of null and NullPointerExceptions, Scala designed a better way -
+the Option type. Rather than returning null when something goes bad, the Scala way is to
+return either Some value if the computation succeeded or None if it failed. Here is an
+example of how you might use Option types to model a random food grab into your refrigerator:</p><pre><code class="language-scala">  /**
+   * A really lame function that might return a random food.
+   */
   def randomFood = math.random match {
-    case x if x &gt; 0.75 =&gt; Some&#40;&quot;Ham&quot;&#41;
-    case x if x &gt; 0.5 =&gt; Some&#40;&quot;Cheese&quot;&#41;
-    case x if x &gt; 0.25 =&gt; Some&#40;&quot;Bacon&quot;&#41;
-    case &#95; =&gt; None
+    case x if x &gt; 0.75 =&gt; Some("Ham")
+    case x if x &gt; 0.5 =&gt; Some("Cheese")
+    case x if x &gt; 0.25 =&gt; Some("Bacon")
+    case _ =&gt; None
   }
-</code></pre><p>If you made a call to randomFood you could then call isDefined or isEmpty on the result to  see if a meaningful result was returned. If the result is meaningful you can then call get  to retrieve the value stored in the Some. In reality, nobody ever does this because it isn't  any better than performing a null check. The only time you might do this is when calling   Scala from Java because Java doesn't understand Scala functions.</p><p>What people really do with Options is use the fact that Scala implicity converts them to  Iterables to perform functional operations on them. You can use functions on Options like  map, foreach, flatten, reduce, and so on. Here's an example:</p><pre><code class="scala">val sandwich = Some&#40;&quot;Bread&quot;&#41; ::
-  &#40;&#40;0 until 10&#41; map { &#95; =&gt; randomFood }&#41;.toList :::
-  Some&#40;&quot;Bread&quot;&#41; :: Nil
+</code></pre><p>If you made a call to randomFood you could then call isDefined or isEmpty on the result to
+see if a meaningful result was returned. If the result is meaningful you can then call get
+to retrieve the value stored in the Some. In reality, nobody ever does this because it isn't
+any better than performing a null check. The only time you might do this is when calling
+Scala from Java because Java doesn't understand Scala functions.</p><p>What people really do with Options is use the fact that Scala implicity converts them to
+Iterables to perform functional operations on them. You can use functions on Options like
+map, foreach, flatten, reduce, and so on. Here's an example:</p><pre><code class="language-scala">val sandwich = Some("Bread") ::
+  ((0 until 10) map { _ =&gt; randomFood }).toList :::
+  Some("Bread") :: Nil
 
-//Prints something like List&#40;Some&#40;Bread&#41;, Some&#40;Ham&#41;, Some&#40;Ham&#41;, None, Some&#40;Bacon&#41;, Some&#40;Bacon&#41;, Some&#40;Ham&#41;, None, Some&#40;Ham&#41;, Some&#40;Bacon&#41;, None, Some&#40;Bread&#41;&#41;
-println&#40;sandwich&#41;
+//Prints something like List(Some(Bread), Some(Ham), Some(Ham), None, Some(Bacon), Some(Bacon), Some(Ham), None, Some(Ham), Some(Bacon), None, Some(Bread))
+println(sandwich)
 
-//Prints something like List&#40;Bread, Ham, Ham, Bacon, Bacon, Ham, Ham, Bacon, Bread&#41;
-println&#40;sandwich.flatten&#41;
-</code></pre><p>Scala also has Nil, which is the empty list. Nil is the odd man out in this post as it is  a specific instance of an empty collection rather than a construct for handling exceptional  behavior, especially with respect to null. Due to Scala's powerful type system and inferencing,  the Scala compiler will figure out what kind of list you are working with as soon as you add  some items to your list.</p><pre><code class="scala">scala&gt; val x = 1 :: 2 :: 3 :: Nil
-x: List&#91;Int&#93; = List&#40;1, 2, 3&#41;
+//Prints something like List(Bread, Ham, Ham, Bacon, Bacon, Ham, Ham, Bacon, Bread)
+println(sandwich.flatten)
+</code></pre><p>Scala also has Nil, which is the empty list. Nil is the odd man out in this post as it is
+a specific instance of an empty collection rather than a construct for handling exceptional
+behavior, especially with respect to null. Due to Scala's powerful type system and inferencing,
+the Scala compiler will figure out what kind of list you are working with as soon as you add
+some items to your list.</p><pre><code class="language-scala">scala&gt; val x = 1 :: 2 :: 3 :: Nil
+x: List[Int] = List(1, 2, 3)
 
 scala&gt; Nil
-res0: scala.collection.immutable.Nil.type = List&#40;&#41;
-</code></pre><p>As you can see in the last line, Nil can't infer a type when no elements of any type  are provided. Sometimes using empty collections like this in Scala can cause problems  in which the compiler can't infer the type information. In such cases, you can just declare the type when declaring the def or val (we don't use vars).  Here's an example that illustrates the point:</p><pre><code class="scala">scala&gt; Some&#40;4&#41; map { x =&gt; x &#42; x } getOrElse 0
+res0: scala.collection.immutable.Nil.type = List()
+</code></pre><p>As you can see in the last line, Nil can't infer a type when no elements of any type
+are provided. Sometimes using empty collections like this in Scala can cause problems
+in which the compiler can't infer the type information. In such cases, you can just
+declare the type when declaring the def or val (we don't use vars).
+Here's an example that illustrates the point:</p><pre><code class="language-scala">scala&gt; Some(4) map { x =&gt; x * x } getOrElse 0
 res0: Int = 16
 
-scala&gt; Some&#40;4.0&#41; map { x =&gt; x &#42; x } getOrElse 0
+scala&gt; Some(4.0) map { x =&gt; x * x } getOrElse 0
 res1: AnyVal = 16.0
 
-scala&gt; None map { x =&gt; x &#42; x } getOrElse 0
-&lt;console&gt;:8: error: value &#42; is not a member of Nothing
-              None map { x =&gt; x &#42; x } getOrElse 0
-                                &#94;
-scala&gt; val n : Option&#91;Double&#93; = None
-n: Option&#91;Double&#93; = None
+scala&gt; None map { x =&gt; x * x } getOrElse 0
+&lt;console&gt;:8: error: value * is not a member of Nothing
+              None map { x =&gt; x * x } getOrElse 0
+                                ^
+scala&gt; val n : Option[Double] = None
+n: Option[Double] = None
 
-scala&gt; n map { x =&gt; x &#42; x } getOrElse 0
+scala&gt; n map { x =&gt; x * x } getOrElse 0
 res3: AnyVal = 0
 
-scala&gt; n map { x =&gt; x &#42; x } getOrElse 0.0
+scala&gt; n map { x =&gt; x * x } getOrElse 0.0
 res4: Double = 0.0
-</code></pre><p>As can be seen from the example, using operations such as map and getOrElse are convenient ways to transform Optional  types to desired outputs. At the same time, care must be taken to make sure type information isn't lost so that you get  the expected result. Despite these potential pitfalls, Scala's ability to treat Options as Iterables makes dealing with  them very convenient.</p><p>Overall, Option is a much better solution than dealing with frequent null checking.</p><h3 id="clojure">Clojure</h3><p>Being hosted on the JVM, Clojure's nil is identical to Java's null. However, how Clojure treats nil is very different  from Java. Rather than exploding every time nil is used a la Java or adding special features to handle exceptional  behavior a la Scala, Clojure has a few simple rules that make it easy to work with nil. First, in logical expressions  nil logically evaluates to false (along with false itself). In Clojure we call this "truthiness" and it is awesome.  Second, when dealing with collections nil is treated like an empty list. These simple rules result in a simple, elegant solution to the dreaded null problem and it also results in a lot less code. To illustrate, here's our random food grab  function in Clojure:</p><pre><code class="clojure">&#40;defn rand-food &#91;&#93;
-  &#40;condp &lt; &#40;rand&#41;
-    0.75 &quot;Ham&quot;
-    0.5 &quot;Cheese&quot;
-    0.25 &quot;Bacon&quot;
-    nil&#41;&#41;
-</code></pre><p>As you can see, I don't do anything special (No Some/None construct) and just return nil (which is null in Java).  It is the simplest solution, which is what Clojure is all about. In Java, this solution would be error-prone since  it is using null. Here's how it works in Clojure:</p><pre><code class="clojure">&#40;let&#91;food &#40;take 10 &#40;repeatedly rand-food&#41;&#41;
-     layers &#40;filter identity food&#41;&#93;
-  &#40;conj &#40;into &#91;&quot;Bread&quot;&#93; layers&#41; &quot;Bread&quot;&#41;&#41;
-=&gt; &#91;&quot;Bread&quot; &quot;Ham&quot; &quot;Bacon&quot; &quot;Cheese&quot; &quot;Ham&quot; &quot;Bacon&quot; &quot;Ham&quot; &quot;Bacon&quot; &quot;Bacon&quot; &quot;Ham&quot; &quot;Ham&quot; &quot;Bread&quot;&#93;
-</code></pre><p>Here's another snippet of examples that show how Clojure deals with nil when it is placed in the position of a null  argument or collection. Compare or in Clojure with getOrElse in Scala. Much simpler.</p><pre><code class="scala">&#40;reduce + &#40;map #&#40;&#42; % %&#41; &#91;1 2 3&#93;&#41;&#41; ;A non-nil example
+</code></pre><p>As can be seen from the example, using operations such as map and getOrElse are convenient ways to transform Optional
+types to desired outputs. At the same time, care must be taken to make sure type information isn't lost so that you get
+the expected result. Despite these potential pitfalls, Scala's ability to treat Options as Iterables makes dealing with
+them very convenient.</p><p>Overall, Option is a much better solution than dealing with frequent null checking.</p><h3>Clojure</h3><p>Being hosted on the JVM, Clojure's nil is identical to Java's null. However, how Clojure treats nil is very different
+from Java. Rather than exploding every time nil is used a la Java or adding special features to handle exceptional
+behavior a la Scala, Clojure has a few simple rules that make it easy to work with nil. First, in logical expressions
+nil logically evaluates to false (along with false itself). In Clojure we call this "truthiness" and it is awesome.
+Second, when dealing with collections nil is treated like an empty list. These simple rules result in a simple, elegant
+solution to the dreaded null problem and it also results in a lot less code. To illustrate, here's our random food grab
+function in Clojure:</p><pre><code class="language-clojure">(defn rand-food []
+  (condp &lt; (rand)
+    0.75 "Ham"
+    0.5 "Cheese"
+    0.25 "Bacon"
+    nil))
+</code></pre><p>As you can see, I don't do anything special (No Some/None construct) and just return nil (which is null in Java).
+It is the simplest solution, which is what Clojure is all about. In Java, this solution would be error-prone since
+it is using null. Here's how it works in Clojure:</p><pre><code class="language-clojure">(let[food (take 10 (repeatedly rand-food))
+     layers (filter identity food)]
+  (conj (into ["Bread"] layers) "Bread"))
+=&gt; ["Bread" "Ham" "Bacon" "Cheese" "Ham" "Bacon" "Ham" "Bacon" "Bacon" "Ham" "Ham" "Bread"]
+</code></pre><p>Here's another snippet of examples that show how Clojure deals with nil when it is placed in the position of a null
+argument or collection. Compare or in Clojure with getOrElse in Scala. Much simpler.</p><pre><code class="language-scala">(reduce + (map #(* % %) [1 2 3])) ;A non-nil example
 =&gt; 14
-&#40;reduce + &#40;map #&#40;&#42; % %&#41; nil&#41;&#41; ;I can reduce into a nil collection
+(reduce + (map #(* % %) nil)) ;I can reduce into a nil collection
 =&gt; 0
-&#40;or nil 4&#41; ;Compare to getOrElse in Scala
+(or nil 4) ;Compare to getOrElse in Scala
 =&gt; 4
-&#40;and nil 4&#41; ;Both items must exist
+(and nil 4) ;Both items must exist
 =&gt; nil
-&#40;conj nil 4&#41; ;I can conjoin 4 to nil to create the list &#40;4&#41;
-=&gt; &#40;4&#41;
-</code></pre><p>As with Scala, Clojure provides a better way to handle null than Java. In contrast to Scala, Clojure does not add any  special classes to handle null. Rather, it uses slightly different rules so that nil has meaning in collection and logical operations. For more on nil in Clojure, read about "nil punning" <a href='http://www.lispcast.com/nil-punning'>here</a>.</p><p>Hands down, I prefer Clojure's handling of nil to either Scala or Java's approach.</p><h2 id="conclusion">Conclusion</h2><p>Null is a unavoidable fact of life. Sometimes things go wrong and the best answer is no answer. How this situation is  dealt with depends very much on the language you are working in. Java, realizing that null is bad, throws lots of  exceptions that you get to deal with, usually with lots of error checking. Scala provides a mechanism to return  something (Some value) or nothing (None) that allows you to more easily deal with situations that might go bad.  Clojure has a few rules for how to deal with nil, primarily the concepts of "truthiness" and treating nil like an  empty list. The rules pretty much solve all your problems when it comes to nil.</p><p>These approaches shed light on the designs of these languages, especially the more recent ones. Scala is, in my opinion,  a complicated language that solves many problems via additional mechanisms to deal with the problems inherited from  Java. I still think it is a great language, but it does take a decidedly baroque approach to solving problems. Clojure,  despite seeming otherworldly at first, is a truly simple language. The more I use it, the more impressed I am with its  simple design and philosophy. Either way, I think you'll find either of these language's solutions to the null problem  preferable to Java's.</p>
+(conj nil 4) ;I can conjoin 4 to nil to create the list (4)
+=&gt; (4)
+</code></pre><p>As with Scala, Clojure provides a better way to handle null than Java. In contrast to Scala, Clojure does not add any
+special classes to handle null. Rather, it uses slightly different rules so that nil has meaning in collection and
+logical operations. For more on nil in Clojure, read about "nil punning" <a href="http://www.lispcast.com/nil-punning">here</a>.</p><p>Hands down, I prefer Clojure's handling of nil to either Scala or Java's approach.</p><h2>Conclusion</h2><p>Null is a unavoidable fact of life. Sometimes things go wrong and the best answer is no answer. How this situation is
+dealt with depends very much on the language you are working in. Java, realizing that null is bad, throws lots of
+exceptions that you get to deal with, usually with lots of error checking. Scala provides a mechanism to return
+something (Some value) or nothing (None) that allows you to more easily deal with situations that might go bad.
+Clojure has a few rules for how to deal with nil, primarily the concepts of "truthiness" and treating nil like an
+empty list. The rules pretty much solve all your problems when it comes to nil.</p><p>These approaches shed light on the designs of these languages, especially the more recent ones. Scala is, in my opinion,
+a complicated language that solves many problems via additional mechanisms to deal with the problems inherited from
+Java. I still think it is a great language, but it does take a decidedly baroque approach to solving problems. Clojure,
+despite seeming otherworldly at first, is a truly simple language. The more I use it, the more impressed I am with its
+simple design and philosophy. Either way, I think you'll find either of these language's solutions to the null problem
+preferable to Java's.</p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags-output/scala/">scala</a>
+    <a href="/blog/tags-output/scala/">scala</a>
     
-    <a href="/tags-output/clojure/">clojure</a>
+    <a href="/blog/tags-output/clojure/">clojure</a>
     
-    <a href="/tags-output/java/">java</a>
+    <a href="/blog/tags-output/java/">java</a>
     
-    <a href="/tags-output/functional programming/">functional programming</a>
+    <a href="/blog/tags-output/functional programming/">functional programming</a>
     
-    <a href="/tags-output/clojurescript/">clojurescript</a>
+    <a href="/blog/tags-output/clojurescript/">clojurescript</a>
     
 </div>
 
 
     <div id="prev-next">
         
-        <a href="/posts-output/2015-06-24-lander/">&laquo; A Lunar Lander Game in Clojure</a>
+        <a href="/blog/posts-output/2015-06-24-lander/">&laquo; A Lunar Lander Game in Clojure</a>
         
         
-        <a class="right" href="/posts-output/2015-05-27-exercises/">Exercises in Clojure with Commentary &raquo;</a>
+        <a class="right" href="/blog/posts-output/2015-05-27-exercises/">Exercises in Clojure with Commentary &raquo;</a>
         
     </div>
 
@@ -249,7 +242,7 @@ res4: Double = 0.0
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_config = function () {
-            this.page.url = "https://markbastian.github.io/posts-output/2015-06-11-differences/";
+            this.page.url = "https://markbastian.github.io/blog/posts-output/2015-06-11-differences/";
             this.page.identifier = "Differences between Null, Nil, nil, Some, and None";
         };
         (function() {
@@ -265,21 +258,94 @@ res4: Double = 0.0
 
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Links</h3>
+                <ul id="links">
+<!--                    <li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+<!--                    <li><a href="https://carmen.la/blog/archives/">Carmen's Blog</a></li>-->
+                    
+                    <li><a href="/blog/pages-output/presentations/">Presentations</a></li>
+                    
+                    <li><a href="/blog/pages-output/projects/">Projects</a></li>
+                    
+                    <li><a href="/blog/pages-output/links/">Links</a></li>
+                    
+                </ul>
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">Clojure and The Joy of Seqs</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/seq/">seq</a></li>
+                        
+                        <li><a href="/blog/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/blog/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/blog/tags-output/iterate/">iterate</a></li>
+                        
+                        <li><a href="/blog/tags-output/sequences/">sequences</a></li>
+                        
+                        <li><a href="/blog/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/blog/tags-output/math/">math</a></li>
+                        
+                        <li><a href="/blog/tags-output/laziness/">laziness</a></li>
+                        
+                        <li><a href="/blog/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/blog/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/blog/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/blog/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/blog/tags-output/conway/">conway</a></li>
+                        
+                        <li><a href="/blog/tags-output/defmacro/">defmacro</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <h3>Social</h3>
+                <p><a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="true">Follow @mark_bastian</a></p>
+                <p><a class="github-button" href="https://github.com/markbastian" data-size="large" data-show-count="true" aria-label="Follow @markbastian on GitHub">Follow @markbastian</a></p>
+                <p><script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script></p>
+            </div>
+        </div>
     </div>
-    <footer>Copyright &copy; 2018 Mark Bastian
-        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
-        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+    <footer>Copyright &copy; 2020 Mark Bastian
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
- <link rel="stylesheet" type="text/css" href=nil>
-<script>
-window.klipse_settings = null;
-</script>
-<script src=nil></script> 
+
 
 </body>
 </html>

@@ -3,36 +3,31 @@
 <head>
     <meta charset="utf-8"/>
     <title>(conj community thoughts): Clojure is Homoiconic, Java is Not</title>
-    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-08-06-homoiconic/">
+    
+<meta name="keywords" content="seq,scala,quil,clojure,differential equations,iterate,sequences,java,math,laziness,functional programming,mazes,concurrency,numerical analysis,juxt,clojurescript,conway,defmacro">
+
+<meta name="description" content="IntroductionRecently I was reading this article regarding what is (or was) new in Java 8 and took an interest in the following section on Lambdas:">
+
+<meta property="og:description" content="IntroductionRecently I was reading this article regarding what is (or was) new in Java 8 and took an interest in the following section on Lambdas:">
+
+<meta property="og:url" content="https://markbastian.github.io/blog/posts-output/2015-08-06-homoiconic/" />
+<meta property="og:title" content="Clojure is Homoiconic, Java is Not" />
+<meta property="og:type" content="article" />
+
+    <link rel="canonical" href="https://markbastian.github.io/blog/posts-output/2015-08-06-homoiconic/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
-          type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700" rel="stylesheet"
+          type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
     <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-    <!--For Google Analytics-->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-89196403-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
-    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -43,96 +38,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">(conj community thoughts)</a>
+            <a class="navbar-brand" href="/blog/">(conj community thoughts)</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li ><a href="/">Home</a></li>
+                <li ><a href="/blog/">Home</a></li>
                 <li
-                ><a href="/archives/">Archives</a></li>
+                ><a href="/blog/archives/">Archives</a></li>
                 
                 <li
                 >
-                <a href="/pages-output/about/">About</a>
+                <a href="/blog/pages-output/about/">About</a>
                 </li>
                 
-                <li><a href="/feed.xml">RSS</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        More <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-header">Links</li>
-                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
-                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
-                        
-                        <li><a href="/pages-output/presentations/">Presentations</a></li>
-                        
-                        <li><a href="/pages-output/projects/">Projects</a></li>
-                        
-                        <li><a href="/pages-output/links/">Links</a></li>
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Recent Posts</li>
-                        
-                        <li><a href="/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
-                        
-                        <li><a href="/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
-                        
-                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
-                        
-                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
-                        
-                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
-                        
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Tags</li>
-                        
-                        <li><a href="/tags-output/scala/">scala</a></li>
-                        
-                        <li><a href="/tags-output/quil/">quil</a></li>
-                        
-                        <li><a href="/tags-output/clojure/">clojure</a></li>
-                        
-                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
-                        
-                        <li><a href="/tags-output/java/">java</a></li>
-                        
-                        <li><a href="/tags-output/math/">math</a></li>
-                        
-                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
-                        
-                        <li><a href="/tags-output/mazes/">mazes</a></li>
-                        
-                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
-                        
-                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
-                        
-                        <li><a href="/tags-output/juxt/">juxt</a></li>
-                        
-                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
-                        
-                        <li><a href="/tags-output/conway/">conway</a></li>
-                        
-                        <li><a href="/tags-output/defmacro/">defmacro</a></li>
-                        
-                        
-                    </ul>
-                </li>
+                <li><a href="/blog/feed.xml">RSS</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
@@ -140,10 +59,8 @@
 
 
 <div class="container">
-
-
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-9">
             <div id="content">
                 
 <div id="post">
@@ -155,82 +72,90 @@
     <h2>Clojure is Homoiconic, Java is Not</h2>
 </div>
 <div>
-    <ol class="content"><li><a href="#introduction">Introduction</a></li><li><a href="#what_is_homoiconicity?">What is Homoiconicity?</a></li><ol><li><a href="#homoiconic_clojure">Homoiconic Clojure</a></li><li><a href="#homoiconic_java">Homoiconic Java</a></li></ol><li><a href="#why_homoiconicity?_-_macros">Why Homoiconicity? - Macros</a></li><li><a href="#parting_thoughts">Parting Thoughts</a></li></ol>
-    <h2 id="introduction">Introduction</h2><p>Recently I was reading <a href='http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html'>this article</a> regarding what is (or was) new in Java 8 and took an interest in the following section on Lambdas:</p><blockquote><p>Lambda Expressions, a new language feature, has been introduced in this release. They enable you to treat functionality as a method argument, or code as data. Lambda expressions let you express instances of single-method interfaces (referred to as functional interfaces) more compactly. </p></blockquote><p>I did a quick <a href='https://www.google.com/search?q=java%20lambdas'>Google search</a> on "java lambdas" and <a href='https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html'>this tutorial was the first hit</a>. Once again, the same type of statement is made:</p><blockquote><p>One issue with anonymous classes is that if the implementation of your anonymous class is very simple, such as an interface that contains only one method, then the syntax of anonymous classes may seem unwieldy and unclear. In these cases, you're usually trying to pass functionality as an argument to another method, such as what action should be taken when someone clicks a button. Lambda expressions enable you to do this, to treat functionality as method argument, or code as data. </p></blockquote><p>The thing that struck me about these articles is the consistent statement that that Java Lambdas (a.k.a. anonymous  instances of single method interfaces) are "code as data" because the function can be passed as an argument. I guess if  you define data as "instances of classes or functions" then this description is fine, but when I read these articles  this is what comes to mind:</p><p><img src="../../img/codeasdata.jpg" alt="alt text" title="Code as data" /></p><p>Technically, the ability to assign a function to a variable or pass a function as an argument to another function means that your functions are "first class" which is a good thing. However, I would not call this "code as data." Another related term is "higher order functions." These are functions that take functions as their arguments or return functions as their results. Again, this is a very powerful language feature that Java now sort of does, but this is not "code as data."</p><p>What do I think of when I think of "code as data?" I think of "Homoiconicity." Google seems to agree, since when I type <a href='https://www.google.com/search?q=code%20as%20data'>"code as data" into a search box</a> the first thing that comes up is <a href='https://en.wikipedia.org/wiki/Homoiconicity'>this Wikipedia article on Homoiconicity</a>. Let's explore the concept in more detail.</p><h2 id="what&#95;is&#95;homoiconicity?">What is Homoiconicity?</h2><p>Often homoiconicity is defined one the following ways:</p><ul><li>The code is written in the data structures of the language.</li><li>Code as data.</li></ul><p>Those more familiar with the concept seem to use "Code as data" more, but I think the first definition is a bit more clear if you are getting started with the idea. Either way, I am going to illustrate the concept by showing how Clojure code is actually written as Clojure data structures. To contrast, I'll also show what "homoiconic Java" would look like. Finally, I'll show you a simple Clojure macro in which we rearrange our code/data.</p><h3 id="homoiconic&#95;clojure">Homoiconic Clojure</h3><p>To start, consider the following core Clojure data structures:</p><ul><li><code>&#40;&#41;</code> is an empty List.</li><li><code>{}</code> is an empty Map.</li><li><code>&#91;&#93;</code> is an empty Vector.</li><li><code>#{}</code> is an empty Set.</li></ul><p>When we write code in Clojure, it is expressed in terms of the above data structures. Here is a very simple example that applies the str function (it's kind of like .toString) to the number 42:</p><pre><code class="clojure">user=&gt; &#40;str 42&#41;
-&quot;42&quot;
-</code></pre><p>You might look at this and think this is the same as the following Java code:</p><pre><code class="java">public static String str&#40;Integer i&#41;{
-    return i.toString&#40;&#41;;
+    
+    <h2>Introduction</h2><p>Recently I was reading <a href="http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html">this article</a> regarding what is (or was) new in Java 8 and took an interest in the following section on Lambdas:</p><blockquote><p>Lambda Expressions, a new language feature, has been introduced in this release. They enable you to treat functionality as a method argument, or code as data. Lambda expressions let you express instances of single-method interfaces (referred to as functional interfaces) more compactly.</p></blockquote><p>I did a quick <a href="https://www.google.com/search?q=java%20lambdas">Google search</a> on "java lambdas" and <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html">this tutorial was the first hit</a>. Once again, the same type of statement is made:</p><blockquote><p>One issue with anonymous classes is that if the implementation of your anonymous class is very simple, such as an interface that contains only one method, then the syntax of anonymous classes may seem unwieldy and unclear. In these cases, you're usually trying to pass functionality as an argument to another method, such as what action should be taken when someone clicks a button. Lambda expressions enable you to do this, to treat functionality as method argument, or code as data.</p></blockquote><p>The thing that struck me about these articles is the consistent statement that that Java Lambdas (a.k.a. anonymous
+instances of single method interfaces) are "code as data" because the function can be passed as an argument. I guess if
+you define data as "instances of classes or functions" then this description is fine, but when I read these articles
+this is what comes to mind:</p><p><img src="../../img/codeasdata.jpg" alt="alt text" title="Code as data" /></p><p>Technically, the ability to assign a function to a variable or pass a function as an argument to another function means that your functions are "first class" which is a good thing. However, I would not call this "code as data." Another related term is "higher order functions." These are functions that take functions as their arguments or return functions as their results. Again, this is a very powerful language feature that Java now sort of does, but this is not "code as data."</p><p>What do I think of when I think of "code as data?" I think of "Homoiconicity." Google seems to agree, since when I type <a href="https://www.google.com/search?q=code%20as%20data">"code as data" into a search box</a> the first thing that comes up is <a href="https://en.wikipedia.org/wiki/Homoiconicity">this Wikipedia article on Homoiconicity</a>. Let's explore the concept in more detail.</p><p>##What is Homoiconicity?
+Often homoiconicity is defined one the following ways:</p><ul><li>The code is written in the data structures of the language.</li><li>Code as data.</li></ul><p>Those more familiar with the concept seem to use "Code as data" more, but I think the first definition is a bit more clear if you are getting started with the idea. Either way, I am going to illustrate the concept by showing how Clojure code is actually written as Clojure data structures. To contrast, I'll also show what "homoiconic Java" would look like. Finally, I'll show you a simple Clojure macro in which we rearrange our code/data.</p><p>###Homoiconic Clojure
+To start, consider the following core Clojure data structures:</p><ul><li><code>()</code> is an empty List.</li><li><code>{}</code> is an empty Map.</li><li><code>[]</code> is an empty Vector.</li><li><code>#{}</code> is an empty Set.</li></ul><p>When we write code in Clojure, it is expressed in terms of the above data structures. Here is a very simple example that applies the str function (it's kind of like .toString) to the number 42:</p><pre><code class="language-clojure">user=&gt; (str 42)
+"42"
+</code></pre><p>You might look at this and think this is the same as the following Java code:</p><pre><code class="language-java">public static String str(Integer i){
+    return i.toString();
 }
 
-str&#40;42&#41;;
-</code></pre><p>The only difference is the location of the parenthesis, right? Wrong! (str 42) not actually the function str with the argument of 42, but is a list containing two elements, the str symbol and the value 42. When the Clojure evaluator sees a list it attempts to resolve the first symbol (str in this case) and calls that function with the remaining elements of the list as arguments. While this may seem like splitting hairs at the moment, this is very important when you get to macros. It is also crucial to the point that Clojure code is data.</p><p>Here's another one:</p><pre><code class="clojure">&#40;defn add &#91;a b&#93;&#40;+ a b&#41;&#41;
-</code></pre><p>Again, you might think this is the same thing as this Java function:</p><pre><code class="java">public static int add&#40;int a, int b&#41;{
+str(42);
+</code></pre><p>The only difference is the location of the parenthesis, right? Wrong! (str 42) not actually the function str with the argument of 42, but is a list containing two elements, the str symbol and the value 42. When the Clojure evaluator sees a list it attempts to resolve the first symbol (str in this case) and calls that function with the remaining elements of the list as arguments. While this may seem like splitting hairs at the moment, this is very important when you get to macros. It is also crucial to the point that Clojure code is data.</p><p>Here's another one:</p><pre><code class="language-clojure">(defn add [a b](+ a b))
+</code></pre><p>Again, you might think this is the same thing as this Java function:</p><pre><code class="language-java">public static int add(int a, int b){
     return a + b;
 }
-</code></pre><p>As before, they are not the same. The above Clojure add function is actually built up with two lists (one nested) and a vector of arguments. The inner list contains three symbols (+, a, and b) and the outer list contains the defn symbol, a symbol naming your function ("add"), a vector of arguments, and our inner list.</p><p>Here's another example:</p><pre><code class="clojure">&#40;merge-with + { :x 1 :y 2 :z 3 } { :x 9 :y 2 :z 4 }&#41;
-</code></pre><p>By this point you should see that we have a list, two maps, and a bunch of symbols and values as opposed to a function that adds two maps. Yes, the evaluator will merge the maps, but the code itself is data (as in the native data structures of the language).</p><p>You can do this type of structural breakdown with any Clojure code. Clojure programs are literal data structures consisting of nested literal data structures, values, and symbols. For more details, read <a href='https://clojure.org/reference/evaluation'>this</a>. The key takeaway is that we are indeed writing our code as a bunch of data (literal data structures containing nested data structures, values, and symbols).</p><h3 id="homoiconic&#95;java">Homoiconic Java</h3><p>What if you wanted to write Java in its own data structures?</p><p>Here are our Java collection interfaces that correspond to the Clojure ones above:</p><ul><li>java.util.List</li><li>java.util.Map</li><li>java.util.Vector</li><li>java.util.Set</li></ul><p>Java, for some inexplicable reason, does not yet have collection literals, so this will be a very verbose exercise. My apologies up front.</p><p><img src="../../img/CollectionLiterals.jpg" alt="alt text" title="Sad Keanu, No Collection Literals" /></p><p>Ok, now let's write some Java code in the data structures of the language:</p><pre><code class="java">    List add = new LinkedList&#40;&#41;;
-    add.add&#40;&quot;+&quot;&#41;;
-    add.add&#40;1&#41;;
-    add.add&#40;1&#41;;
-</code></pre><p>Sadly, I have no way to evaluate this code, but, hey, it's data. I chose to use a String to represent the + operation because Java doesn't have symbols, either.</p><p>Here's another attempt at how I might construct some code as data in Java. I realize that this will be an utter failure, but you're just going to have to follow along as I write a ton of code to make my point.</p><pre><code class="java">    Map a = new HashMap&#40;&#41;;
-    a.put&#40;&quot;x&quot;, 1&#41;;
-    a.put&#40;&quot;y&quot;, 2&#41;;
-    a.put&#40;&quot;z&quot;, 3&#41;;
+</code></pre><p>As before, they are not the same. The above Clojure add function is actually built up with two lists (one nested) and a vector of arguments. The inner list contains three symbols (+, a, and b) and the outer list contains the defn symbol, a symbol naming your function ("add"), a vector of arguments, and our inner list.</p><p>Here's another example:</p><pre><code class="language-clojure">(merge-with + { :x 1 :y 2 :z 3 } { :x 9 :y 2 :z 4 })
+</code></pre><p>By this point you should see that we have a list, two maps, and a bunch of symbols and values as opposed to a function that adds two maps. Yes, the evaluator will merge the maps, but the code itself is data (as in the native data structures of the language).</p><p>You can do this type of structural breakdown with any Clojure code. Clojure programs are literal data structures consisting of nested literal data structures, values, and symbols. For more details, read <a href="https://clojure.org/reference/evaluation">this</a>. The key takeaway is that we are indeed writing our code as a bunch of data (literal data structures containing nested data structures, values, and symbols).</p><p>###Homoiconic Java
+What if you wanted to write Java in its own data structures?</p><p>Here are our Java collection interfaces that correspond to the Clojure ones above:</p><ul><li>java.util.List</li><li>java.util.Map</li><li>java.util.Vector</li><li>java.util.Set</li></ul><p>Java, for some inexplicable reason, does not yet have collection literals, so this will be a very verbose exercise. My apologies up front.</p><p><img src="../../img/CollectionLiterals.jpg" alt="alt text" title="Sad Keanu, No Collection Literals" /></p><p>Ok, now let's write some Java code in the data structures of the language:</p><pre><code class="language-java">    List add = new LinkedList();
+    add.add("+");
+    add.add(1);
+    add.add(1);
+</code></pre><p>Sadly, I have no way to evaluate this code, but, hey, it's data. I chose to use a String to represent the + operation because Java doesn't have symbols, either.</p><p>Here's another attempt at how I might construct some code as data in Java. I realize that this will be an utter failure, but you're just going to have to follow along as I write a ton of code to make my point.</p><pre><code class="language-java">    Map a = new HashMap();
+    a.put("x", 1);
+    a.put("y", 2);
+    a.put("z", 3);
 
-    Map b = new HashMap&#40;&#41;;
-    b.put&#40;&quot;x&quot;, 9&#41;;
-    b.put&#40;&quot;y&quot;, 2&#41;;
-    b.put&#40;&quot;z&quot;, 4&#41;;
+    Map b = new HashMap();
+    b.put("x", 9);
+    b.put("y", 2);
+    b.put("z", 4);
         
-    List mergemaps = new LinkedList&#40;&#41;;
-    add.add&#40;&quot;merge-with&quot;&#41;;
-    add.add&#40;&quot;+&quot;&#41;;
-    add.add&#40;a&#41;;
-    add.add&#40;b&#41;;
-</code></pre><p>Again, this can't be evaluated, but it's about as close as you can get to homoiconicity in Java.</p><h2 id="why&#95;homoiconicity?&#95;-&#95;macros">Why Homoiconicity? - Macros</h2><p>Consider this question: "What can you do with data?" Think about an Excel spreadsheet, a simple comma separated value file, or some JSON data. These are things you can easily sort, manipulate, and transform.</p><p>In the same way, Clojure code can be manipulated and transformed as data. In Clojure there is a facility for this called a macro. When Clojure evaluates macros, it does not evaluate the arguments as with a regular function. Rather, it passes the unevaluated arguments into the macro to be manipulated. Once this is done, the result is returned and evaluated.</p><p>Here's an example:</p><pre><code class="clojure">&#40;defmacro bizzaro-math
-  &quot;Do everything the opposite of normal&quot;
-  &#91;&#91;op &amp; rest&#93;&#93;
-  &#40;conj rest &#40;case op
+    List mergemaps = new LinkedList();
+    add.add("merge-with");
+    add.add("+");
+    add.add(a);
+    add.add(b);
+</code></pre><p>Again, this can't be evaluated, but it's about as close as you can get to homoiconicity in Java.</p><p>##Why Homoiconicity? - Macros
+Consider this question: "What can you do with data?" Think about an Excel spreadsheet, a simple comma separated value file, or some JSON data. These are things you can easily sort, manipulate, and transform.</p><p>In the same way, Clojure code can be manipulated and transformed as data. In Clojure there is a facility for this called a macro. When Clojure evaluates macros, it does not evaluate the arguments as with a regular function. Rather, it passes the unevaluated arguments into the macro to be manipulated. Once this is done, the result is returned and evaluated.</p><p>Here's an example:</p><pre><code class="language-clojure">(defmacro bizzaro-math
+  "Do everything the opposite of normal"
+  [[op &amp; rest]]
+  (conj rest (case op
                + -
                - +
-               &#42; /
-               / &#42;
-               op&#41;&#41;&#41;
-</code></pre><p>This macro takes its arguments and inverts the first argument if it is a basic arithmetic operator. Note that this would not be possible if the arguments were evaluated rather than treated as data. Here are some examples of it in use:</p><pre><code class="clojure">&#40;bizzaro-math &#40;+ 2 3&#41;&#41;
+               * /
+               / *
+               op)))
+</code></pre><p>This macro takes its arguments and inverts the first argument if it is a basic arithmetic operator. Note that this would not be possible if the arguments were evaluated rather than treated as data. Here are some examples of it in use:</p><pre><code class="language-clojure">(bizzaro-math (+ 2 3))
 =&gt; -1
-&#40;bizzaro-math &#40;- 2 3&#41;&#41;
+(bizzaro-math (- 2 3))
 =&gt; 5
-&#40;bizzaro-math &#40;&#42; 2 3&#41;&#41;
+(bizzaro-math (* 2 3))
 =&gt; 2/3
-&#40;bizzaro-math &#40;/ 2 3&#41;&#41;
+(bizzaro-math (/ 2 3))
 =&gt; 6
-&#40;bizzaro-math &#40;rem 2 3&#41;&#41;
+(bizzaro-math (rem 2 3))
 =&gt; 2
-</code></pre><p>The most important thing to note here is that the inner forms (e.g. (+ 2 3)) are not evaluated, but are manipulated by the macro, then evaluated. This is the ultimate demonstration that we do, indeed, have code as data.</p><p>A more in-depth discussion of macros is beyond the scope of this post, but the main takeaway is that macros allow you to manipulate code. This is a feature unique to homoiconic languages.</p><h2 id="parting&#95;thoughts">Parting Thoughts</h2><p>Code as data, a.k.a. homoiconicity, is the ability to write your code in the data structures of your language. This goes way beyond the simple ability to pass a function as an argument. If that's all you are looking for, Java might be all you need. If you want full on FP on the JVM, you've got better options. Scala is a great bridge language that has first class functions, higher order functions, partial evaluation, composition, and all the other things you'd expect from a functional language. Clojure, however, is King if want it all. Not only is it functional, it is truly homoiconic.</p><p>Further Reading:</p><ul><li><a href='http://www.paulgraham.com/avg.html'>Beating the Averages</a></li><li><a href='http://www.braveclojure.com/read-and-eval/#5__Macros'>Clojure For the Brave and True</a></li><li><a href='https://clojure.org/reference/macros'>Clojure Macros</a></li></ul>
+</code></pre><p>The most important thing to note here is that the inner forms (e.g. (+ 2 3)) are not evaluated, but are manipulated by the macro, then evaluated. This is the ultimate demonstration that we do, indeed, have code as data.</p><p>A more in-depth discussion of macros is beyond the scope of this post, but the main takeaway is that macros allow you to manipulate code. This is a feature unique to homoiconic languages.</p><p>##Parting Thoughts
+Code as data, a.k.a. homoiconicity, is the ability to write your code in the data structures of your language. This goes way beyond the simple ability to pass a function as an argument. If that's all you are looking for, Java might be all you need. If you want full on FP on the JVM, you've got better options. Scala is a great bridge language that has first class functions, higher order functions, partial evaluation, composition, and all the other things you'd expect from a functional language. Clojure, however, is King if want it all. Not only is it functional, it is truly homoiconic.</p><p>Further Reading:</p><ul><li><a href="http://www.paulgraham.com/avg.html">Beating the Averages</a></li><li><a href="http://www.braveclojure.com/read-and-eval/#5__Macros">Clojure For the Brave and True</a></li><li><a href="https://clojure.org/reference/macros">Clojure Macros</a></li></ul>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags-output/scala/">scala</a>
+    <a href="/blog/tags-output/scala/">scala</a>
     
-    <a href="/tags-output/clojure/">clojure</a>
+    <a href="/blog/tags-output/clojure/">clojure</a>
     
-    <a href="/tags-output/java/">java</a>
+    <a href="/blog/tags-output/java/">java</a>
     
-    <a href="/tags-output/functional programming/">functional programming</a>
+    <a href="/blog/tags-output/functional programming/">functional programming</a>
     
-    <a href="/tags-output/clojurescript/">clojurescript</a>
+    <a href="/blog/tags-output/clojurescript/">clojurescript</a>
     
 </div>
 
 
     <div id="prev-next">
         
-        <a href="/posts-output/2015-08-25-snake/">&laquo; A Clojure Snake Game</a>
+        <a href="/blog/posts-output/2015-08-25-snake/">&laquo; A Clojure Snake Game</a>
         
         
-        <a class="right" href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure &raquo;</a>
+        <a class="right" href="/blog/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure &raquo;</a>
         
     </div>
 
@@ -238,7 +163,7 @@ str&#40;42&#41;;
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_config = function () {
-            this.page.url = "https://markbastian.github.io/posts-output/2015-08-06-homoiconic/";
+            this.page.url = "https://markbastian.github.io/blog/posts-output/2015-08-06-homoiconic/";
             this.page.identifier = "Clojure is Homoiconic, Java is Not";
         };
         (function() {
@@ -254,21 +179,94 @@ str&#40;42&#41;;
 
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Links</h3>
+                <ul id="links">
+<!--                    <li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+<!--                    <li><a href="https://carmen.la/blog/archives/">Carmen's Blog</a></li>-->
+                    
+                    <li><a href="/blog/pages-output/presentations/">Presentations</a></li>
+                    
+                    <li><a href="/blog/pages-output/projects/">Projects</a></li>
+                    
+                    <li><a href="/blog/pages-output/links/">Links</a></li>
+                    
+                </ul>
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">Clojure and The Joy of Seqs</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/seq/">seq</a></li>
+                        
+                        <li><a href="/blog/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/blog/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/blog/tags-output/iterate/">iterate</a></li>
+                        
+                        <li><a href="/blog/tags-output/sequences/">sequences</a></li>
+                        
+                        <li><a href="/blog/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/blog/tags-output/math/">math</a></li>
+                        
+                        <li><a href="/blog/tags-output/laziness/">laziness</a></li>
+                        
+                        <li><a href="/blog/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/blog/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/blog/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/blog/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/blog/tags-output/conway/">conway</a></li>
+                        
+                        <li><a href="/blog/tags-output/defmacro/">defmacro</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <h3>Social</h3>
+                <p><a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="true">Follow @mark_bastian</a></p>
+                <p><a class="github-button" href="https://github.com/markbastian" data-size="large" data-show-count="true" aria-label="Follow @markbastian on GitHub">Follow @markbastian</a></p>
+                <p><script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script></p>
+            </div>
+        </div>
     </div>
-    <footer>Copyright &copy; 2018 Mark Bastian
-        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
-        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+    <footer>Copyright &copy; 2020 Mark Bastian
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
- <link rel="stylesheet" type="text/css" href=nil>
-<script>
-window.klipse_settings = null;
-</script>
-<script src=nil></script> 
+
 
 </body>
 </html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>(conj community thoughts)</title>
+    
+    <meta name="description" content="Thoughts on Clojure, Functional Programming, and the like">
+    <meta name="keywords" content="">
+    
+    <link rel="canonical" href="https://markbastian.github.io">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700" rel="stylesheet"
+          type="text/css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
+    <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/blog/">(conj community thoughts)</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/blog/">Home</a></li>
+                <li
+                ><a href="/blog/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/blog/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/blog/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    
+    <div class="post-header">
+        <h2>Quil, Clojure, and WORA</h2>
+        <div id="post-meta">
+            
+            <div class="date">July 14, 2015</div>
+        </div>
+    </div>
+    <h2>Introduction</h2><p>Since my last post, I've been playing with the excellent <a href="http://quil.info">Quil library</a>, a "Clojure/ClojureScript library for creating interactive drawings and animations." Prior to this, I was writing demonstrations using the following scheme:</p>
+    <a href="/blog/posts-output/2015-07-14-quilwora/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>A Lunar Lander Game in Clojure</h2>
+        <div id="post-meta">
+            
+            <div class="date">June 24, 2015</div>
+        </div>
+    </div>
+    <h2>Introduction</h2><p>In a prior post, I spent a great deal of time <a href="../2015-04-28-predator-prey/">talking about Predator-Prey systems</a>, ordinary differential equations, and solving these equations in Clojure. In this post, I describe a recent project I did that uses the same ODE solver to do something much more fun - implement a physics-based lunar lander game.</p>
+    <a href="/blog/posts-output/2015-06-24-lander/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Differences between Null, Nil, nil, Some, and None</h2>
+        <div id="post-meta">
+            
+            <div class="date">June 11, 2015</div>
+        </div>
+    </div>
+    <h2>Introduction</h2><p>During a recent code review, a coworker who had the good fortune of jumping straight from
+Java to Clojure was asking me a few questions about some Scala code she'd been asked to edit.
+The particular problem involved recursive accumulation of some list data and our conversation
+drifted towards some questions regarding the different-yet-similar-sounding terms in these JVM
+languages. Java, Scala, and Clojure together have Null, Nil, nil, Some, and None. Most of these
+are related in their respective languages to how exceptional behaviors are handled with respect
+to references and/or collections. Here I explain each of these from the perspective of their host
+languages and my opinion of the effectiveness of each solution.</p>
+    <a href="/blog/posts-output/2015-06-11-differences/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Exercises in Clojure with Commentary</h2>
+        <div id="post-meta">
+            
+            <div class="date">May 27, 2015</div>
+        </div>
+    </div>
+    <h2>Introduction</h2><p>I was recently browsing some links from my Twitter feed and came across some programming exercises and their solutions. I selected a few that I thought were interesting, solved them, and now I want to present my solutions here along with some commentary on how they were solved. I think the solutions and especially their comments might be helpful to new Clojurists as well as Java developers who are looking for some examples of why Clojure code is so much more concise. Without further ado, here they are.</p>
+    <a href="/blog/posts-output/2015-05-27-exercises/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Functional Programming from the Fire Hose</h2>
+        <div id="post-meta">
+            
+            <div class="date">May 15, 2015</div>
+        </div>
+    </div>
+    <p>Earlier this year I gave a presentation at work entitled "Functional Programming (FP) from the Fire Hose."
+My goal was to present, to a mostly OOP audience, some of the basics of FP while also providing examples that show
+that FP isn't just academic. You can't sell people on FP with concepts alone. People's eyes just glaze over and roll
+back into their heads when you start talking functional concepts like first class and higher order functions,
+immutability, statelessness, referential transparency, homoiconicity, and the like (I won't even say the M-word).
+With that in mind, I tried to go fast on FP and show several clear examples that demonstrate FP in action, even at a
+very small scale.</p><p>In my presentation, I do (or attempt to do) the following:</p>
+    <a href="/blog/posts-output/2015-05-15-fpfirehose/">Continue reading &#8594;</a>
+    <hr>
+    
+
+    <div id="prev-next">
+        
+        <a class="left" href="/blog/p/2/">&laquo; Prev</a>
+        
+        
+        <a class="right" href="/blog/p/4/">Next &raquo;</a>
+        
+    </div>
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Links</h3>
+                <ul id="links">
+<!--                    <li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+<!--                    <li><a href="https://carmen.la/blog/archives/">Carmen's Blog</a></li>-->
+                    
+                    <li><a href="/blog/pages-output/presentations/">Presentations</a></li>
+                    
+                    <li><a href="/blog/pages-output/projects/">Projects</a></li>
+                    
+                    <li><a href="/blog/pages-output/links/">Links</a></li>
+                    
+                </ul>
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">Clojure and The Joy of Seqs</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/seq/">seq</a></li>
+                        
+                        <li><a href="/blog/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/blog/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/blog/tags-output/iterate/">iterate</a></li>
+                        
+                        <li><a href="/blog/tags-output/sequences/">sequences</a></li>
+                        
+                        <li><a href="/blog/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/blog/tags-output/math/">math</a></li>
+                        
+                        <li><a href="/blog/tags-output/laziness/">laziness</a></li>
+                        
+                        <li><a href="/blog/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/blog/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/blog/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/blog/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/blog/tags-output/conway/">conway</a></li>
+                        
+                        <li><a href="/blog/tags-output/defmacro/">defmacro</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <h3>Social</h3>
+                <p><a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="true">Follow @mark_bastian</a></p>
+                <p><a class="github-button" href="https://github.com/markbastian" data-size="large" data-show-count="true" aria-label="Follow @markbastian on GitHub">Follow @markbastian</a></p>
+                <p><script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script></p>
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy; 2020 Mark Bastian
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+</body>
+</html>

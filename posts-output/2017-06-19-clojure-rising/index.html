@@ -3,36 +3,37 @@
 <head>
     <meta charset="utf-8"/>
     <title>(conj community thoughts): Clojure Rising</title>
-    <link rel="canonical" href="https://markbastian.github.io/posts-output/2017-06-19-clojure-rising/">
+    
+<meta name="keywords" content="seq,scala,quil,clojure,differential equations,iterate,sequences,java,math,laziness,functional programming,mazes,concurrency,numerical analysis,juxt,clojurescript,conway,defmacro">
+
+<meta name="description" content="#Still Here, Still Doing Clojure
+It&#39;s been a while since I&#39;ve added to my blog over at fn-code. If you were to speculate
+that this is because I am no longer a Clojurian, you would be very wrong. In fact, from my perspective Clojure adoption and
+usage is alive, well, and growing in both my own life and in the community.As far as the lack of blogging goes, here&#39;s a summary of what&#39;s been going on with me:">
+
+<meta property="og:description" content="#Still Here, Still Doing Clojure
+It&#39;s been a while since I&#39;ve added to my blog over at fn-code. If you were to speculate
+that this is because I am no longer a Clojurian, you would be very wrong. In fact, from my perspective Clojure adoption and
+usage is alive, well, and growing in both my own life and in the community.As far as the lack of blogging goes, here&#39;s a summary of what&#39;s been going on with me:">
+
+<meta property="og:url" content="https://markbastian.github.io/blog/posts-output/2017-06-19-clojure-rising/" />
+<meta property="og:title" content="Clojure Rising" />
+<meta property="og:type" content="article" />
+
+    <link rel="canonical" href="https://markbastian.github.io/blog/posts-output/2017-06-19-clojure-rising/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
-          type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700" rel="stylesheet"
+          type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
     <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-    <!--For Google Analytics-->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-89196403-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
-    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -43,96 +44,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">(conj community thoughts)</a>
+            <a class="navbar-brand" href="/blog/">(conj community thoughts)</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li ><a href="/">Home</a></li>
+                <li ><a href="/blog/">Home</a></li>
                 <li
-                ><a href="/archives/">Archives</a></li>
+                ><a href="/blog/archives/">Archives</a></li>
                 
                 <li
                 >
-                <a href="/pages-output/about/">About</a>
+                <a href="/blog/pages-output/about/">About</a>
                 </li>
                 
-                <li><a href="/feed.xml">RSS</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        More <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-header">Links</li>
-                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
-                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
-                        
-                        <li><a href="/pages-output/presentations/">Presentations</a></li>
-                        
-                        <li><a href="/pages-output/projects/">Projects</a></li>
-                        
-                        <li><a href="/pages-output/links/">Links</a></li>
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Recent Posts</li>
-                        
-                        <li><a href="/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
-                        
-                        <li><a href="/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
-                        
-                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
-                        
-                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
-                        
-                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
-                        
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Tags</li>
-                        
-                        <li><a href="/tags-output/scala/">scala</a></li>
-                        
-                        <li><a href="/tags-output/quil/">quil</a></li>
-                        
-                        <li><a href="/tags-output/clojure/">clojure</a></li>
-                        
-                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
-                        
-                        <li><a href="/tags-output/java/">java</a></li>
-                        
-                        <li><a href="/tags-output/math/">math</a></li>
-                        
-                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
-                        
-                        <li><a href="/tags-output/mazes/">mazes</a></li>
-                        
-                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
-                        
-                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
-                        
-                        <li><a href="/tags-output/juxt/">juxt</a></li>
-                        
-                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
-                        
-                        <li><a href="/tags-output/conway/">conway</a></li>
-                        
-                        <li><a href="/tags-output/defmacro/">defmacro</a></li>
-                        
-                        
-                    </ul>
-                </li>
+                <li><a href="/blog/feed.xml">RSS</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
@@ -140,10 +65,8 @@
 
 
 <div class="container">
-
-
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-9">
             <div id="content">
                 
 <div id="post">
@@ -155,26 +78,55 @@
     <h2>Clojure Rising</h2>
 </div>
 <div>
-    <ol class="content"><li><a href="#still_here,_still_doing_clojure">Still Here, Still Doing Clojure</a></li><li><a href="#clojure_rising">Clojure Rising</a></li><li><a href="#recommitting_to_the_blog">Recommitting to the Blog</a></li><li><a href="#aside:_the_new_platform">Aside: The New Platform</a></li></ol>
-     <h1 id="still&#95;here,&#95;still&#95;doing&#95;clojure">Still Here, Still Doing Clojure</h1><p>It's been a while since I've added to my blog over at <a href='https://fn-code.blogspot.com'>fn-code</a>. If you were to speculate that this is because I am no longer a Clojurian, you would be very wrong. In fact, from my perspective Clojure adoption and usage is alive, well, and growing in both my own life and in the community.</p><p>As far as the lack of blogging goes, here's a summary of what's been going on with me:</p><ul><li>I changed jobs in late 2015 and moved from New Mexico to Idaho.</li><li>I've been actively evangelizing and promoting Clojure within my own company, to great effect. This takes a lot of time.</li><li>Other competing interests: Family, personal coding projects, learning IoT, reading books, playing games, sleeping, etc.</li><li>Google modified Drive to no longer serve up JavaScript libraries and other assets which made blogger a much less attractive blogging platform. Finding and implementing a <i>good</i> workaround has been a time suck.</li><li>Blogging is hard. If you don't believe me, try to write an informative and interesting post. Then continue to do so on a regular basis.</li></ul><p>So, despite the lack of blogging I've still been living the Clojure dream. My public presence has just been reduced due to competing interests for my time. A few weeks ago, though, there was a minor kerfuffle on some of the interwebs regarding the early demise of Clojure that made me think I should get back into the blogging scene. My audience probably  isn't huge, but I still wanted to let people know that in my world, at least, Clojure is not dead, but is very much on the rise.</p><h1 id="clojure&#95;rising">Clojure Rising</h1><p>From where I sit, I am personally witnessing rising Clojure adoption and enthusiasm.</p><p>At my former employer, Sandia National Laboratories, my team has gone "all in" on Clojure. Here's a talk given at  Clojure/conj 2016 from a former co-worker, Jennifer Lewis, about her experiences:</p><p><iframe width="640" height="360" src="https://www.youtube.com/embed/RB65-zYLNSY" frameborder="0" allowfullscreen></iframe></p><p>I don't stay in frequent contact with my Sandia colleagues, but when I do hear from them they are still going strong on  the Clojure front.</p><p>At my current employer, Clearwater Analytics, there is one team of 9 developers that are "all in" on Clojure as well as  a few others that work on smaller projects in Clojure. When I started out at Clearwater in September 2015 I was the only  hard core Clojure developer. A few others had dabbled in the language and really liked it but nobody was doing any full  time work in it. That's a substantial change in just over a year and a half. <a href='https://clearwateranalytics-openhire.silkroad.com/epostings/index.cfm?fuseaction=app.jobinfo&jobid=162&source=ONLINE&JobOwner=992285&company_id=17178&version=1&byBusinessUnit=NULL&bycountry=1&bystate=1&byRegion=US_ID&bylocation=US&keywords=&byCat=36316&proximityCountry=&postalCode=&radiusDistance=&isKilometers=&tosearch=yes&city='>We even have a full-time job posting exclusively for Clojure developers</a>.</p><p>Beyond my own experiences, I see many companies that are doing really interesting work in Clojure as well. Companies  like Walmart Labs, LonoCloud, and ThreatGrid (to name a few - <a href='https://clojure.org/community/success_stories'>there are many others</a>)  are doing really amazing work to solve challenging problems and the recurring theme is that Clojure is a major enabler. Teams that have adopted Clojure often report having the common experience of being more productive and having more fun  while doing it.</p><p>So, yes, I see a lot of opportunities in the Clojure landscape and I think things are only going to get better. Smart teams are continuing to see the Clojure ecosystem as a way to implement creative, cutting-edge solutions to problems much  faster than other technologies and they are having fun while doing it.</p><h1 id="recommitting&#95;to&#95;the&#95;blog">Recommitting to the Blog</h1><p>Despite the rosy outlook from my perspective, I see that not everything is perfect in Clojure-land. We are still a  relatively small community that needs to work to foster growth and adoption. For my part, I am going to try to get back into providing regular blog content that is useful to the community. </p><p>A couple topics that I think would be of value are:</p><ul><li>Functional programming basics: Learning Clojure, functional programming, and new tooling (e.g. Emacs+CIDER) at the same time can be daunting. For many Clojure neophytes, this is the situation. I have some ideas for posts that  illustrate some of the basic concepts to help those trying to get into the FP paradigm while also learning Clojure.</li><li>Adoption tips and tricks: I have had the great opportunity of leading adoption of Clojure at two different organizations. This wasn't serendipitous. I'll blog on this and provide some advice to those of you who want to do Clojure  full time but aren't seeing a path to it.</li></ul><p>I'll also continue to blog about topics of general interest regarding Clojure.</p><h1 id="aside:&#95;the&#95;new&#95;platform">Aside: The New Platform</h1><p>After experiencing frustration with blogger I spent a bunch of time looking at alternatives. After some recent posts from the community about <a href='http://cryogenweb.org'>Cryogen</a> I decided to give it a shot and all I can say is that it is awesome.  So, this is the new home for my blog. I've migrated all of my old posts over as well. I hope you come back soon.</p>
+    
+    <p>#Still Here, Still Doing Clojure
+It's been a while since I've added to my blog over at <a href="https://fn-code.blogspot.com">fn-code</a>. If you were to speculate
+that this is because I am no longer a Clojurian, you would be very wrong. In fact, from my perspective Clojure adoption and
+usage is alive, well, and growing in both my own life and in the community.</p><p>As far as the lack of blogging goes, here's a summary of what's been going on with me:</p><ul><li>I changed jobs in late 2015 and moved from New Mexico to Idaho.</li><li>I've been actively evangelizing and promoting Clojure within my own company, to great effect. This takes a lot of time.</li><li>Other competing interests: Family, personal coding projects, learning IoT, reading books, playing games, sleeping, etc.</li><li>Google modified Drive to no longer serve up JavaScript libraries and other assets which made blogger a much less
+attractive blogging platform. Finding and implementing a <em>good</em> workaround has been a time suck.</li><li>Blogging is hard. If you don't believe me, try to write an informative and interesting post. Then continue to do so on a regular basis.</li></ul><p>So, despite the lack of blogging I've still been living the Clojure dream. My public presence has just been reduced
+due to competing interests for my time. A few weeks ago, though, there was a minor kerfuffle on some of the interwebs
+regarding the early demise of Clojure that made me think I should get back into the blogging scene. My audience probably
+isn't huge, but I still wanted to let people know that in my world, at least, Clojure is not dead, but is very much on the rise.</p><p>#Clojure Rising
+From where I sit, I am personally witnessing rising Clojure adoption and enthusiasm.</p><p>At my former employer, Sandia National Laboratories, my team has gone "all in" on Clojure. Here's a talk given at
+Clojure/conj 2016 from a former co-worker, Jennifer Lewis, about her experiences:</p><iframe width="640" height="360" src="https://www.youtube.com/embed/RB65-zYLNSY" frameborder="0" allowfullscreen="allowfullscreen"></iframe><p>I don't stay in frequent contact with my Sandia colleagues, but when I do hear from them they are still going strong on
+the Clojure front.</p><p>At my current employer, Clearwater Analytics, there is one team of 9 developers that are "all in" on Clojure as well as
+a few others that work on smaller projects in Clojure. When I started out at Clearwater in September 2015 I was the only
+hard core Clojure developer. A few others had dabbled in the language and really liked it but nobody was doing any full
+time work in it. That's a substantial change in just over a year and a half. <a href="https://clearwateranalytics-openhire.silkroad.com/epostings/index.cfm?fuseaction=app.jobinfo&amp;jobid=162&amp;source=ONLINE&amp;JobOwner=992285&amp;company_id=17178&amp;version=1&amp;byBusinessUnit=NULL&amp;bycountry=1&amp;bystate=1&amp;byRegion=US_ID&amp;bylocation=US&amp;keywords=&amp;byCat=36316&amp;proximityCountry=&amp;postalCode=&amp;radiusDistance=&amp;isKilometers=&amp;tosearch=yes&amp;city=">We even have a full-time job posting exclusively for Clojure developers</a>.</p><p>Beyond my own experiences, I see many companies that are doing really interesting work in Clojure as well. Companies
+like Walmart Labs, LonoCloud, and ThreatGrid (to name a few - <a href="https://clojure.org/community/success_stories">there are many others</a>)
+are doing really amazing work to solve challenging problems and the recurring theme is that Clojure is a major enabler.
+Teams that have adopted Clojure often report having the common experience of being more productive and having more fun
+while doing it.</p><p>So, yes, I see a lot of opportunities in the Clojure landscape and I think things are only going to get better. Smart
+teams are continuing to see the Clojure ecosystem as a way to implement creative, cutting-edge solutions to problems much
+faster than other technologies and they are having fun while doing it.</p><p>#Recommitting to the Blog
+Despite the rosy outlook from my perspective, I see that not everything is perfect in Clojure-land. We are still a
+relatively small community that needs to work to foster growth and adoption. For my part, I am going to try to get back
+into providing regular blog content that is useful to the community.</p><p>A couple topics that I think would be of value are:</p><ul><li>Functional programming basics: Learning Clojure, functional programming, and new tooling (e.g. Emacs+CIDER) at the
+same time can be daunting. For many Clojure neophytes, this is the situation. I have some ideas for posts that
+illustrate some of the basic concepts to help those trying to get into the FP paradigm while also learning Clojure.</li><li>Adoption tips and tricks: I have had the great opportunity of leading adoption of Clojure at two different
+organizations. This wasn't serendipitous. I'll blog on this and provide some advice to those of you who want to do Clojure
+full time but aren't seeing a path to it.</li></ul><p>I'll also continue to blog about topics of general interest regarding Clojure.</p><p>#Aside: The New Platform
+After experiencing frustration with blogger I spent a bunch of time looking at alternatives. After some recent posts from
+the community about <a href="http://cryogenweb.org">Cryogen</a> I decided to give it a shot and all I can say is that it is awesome.
+So, this is the new home for my blog. I've migrated all of my old posts over as well. I hope you come back soon.</p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags-output/clojure/">clojure</a>
+    <a href="/blog/tags-output/clojure/">clojure</a>
     
-    <a href="/tags-output/clojurescript/">clojurescript</a>
+    <a href="/blog/tags-output/clojurescript/">clojurescript</a>
     
 </div>
 
 
     <div id="prev-next">
         
-        <a href="/posts-output/2017-07-10-polymacro/">&laquo; A Polynomial Macro</a>
+        <a href="/blog/posts-output/2017-07-10-polymacro/">&laquo; A Polynomial Macro</a>
         
         
-        <a class="right" href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure &raquo;</a>
+        <a class="right" href="/blog/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure &raquo;</a>
         
     </div>
 
@@ -182,7 +134,7 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_config = function () {
-            this.page.url = "https://markbastian.github.io/posts-output/2017-06-19-clojure-rising/";
+            this.page.url = "https://markbastian.github.io/blog/posts-output/2017-06-19-clojure-rising/";
             this.page.identifier = "Clojure Rising";
         };
         (function() {
@@ -198,21 +150,94 @@
 
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Links</h3>
+                <ul id="links">
+<!--                    <li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+<!--                    <li><a href="https://carmen.la/blog/archives/">Carmen's Blog</a></li>-->
+                    
+                    <li><a href="/blog/pages-output/presentations/">Presentations</a></li>
+                    
+                    <li><a href="/blog/pages-output/projects/">Projects</a></li>
+                    
+                    <li><a href="/blog/pages-output/links/">Links</a></li>
+                    
+                </ul>
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">Clojure and The Joy of Seqs</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/seq/">seq</a></li>
+                        
+                        <li><a href="/blog/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/blog/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/blog/tags-output/iterate/">iterate</a></li>
+                        
+                        <li><a href="/blog/tags-output/sequences/">sequences</a></li>
+                        
+                        <li><a href="/blog/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/blog/tags-output/math/">math</a></li>
+                        
+                        <li><a href="/blog/tags-output/laziness/">laziness</a></li>
+                        
+                        <li><a href="/blog/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/blog/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/blog/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/blog/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/blog/tags-output/conway/">conway</a></li>
+                        
+                        <li><a href="/blog/tags-output/defmacro/">defmacro</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <h3>Social</h3>
+                <p><a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="true">Follow @mark_bastian</a></p>
+                <p><a class="github-button" href="https://github.com/markbastian" data-size="large" data-show-count="true" aria-label="Follow @markbastian on GitHub">Follow @markbastian</a></p>
+                <p><script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script></p>
+            </div>
+        </div>
     </div>
-    <footer>Copyright &copy; 2018 Mark Bastian
-        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
-        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+    <footer>Copyright &copy; 2020 Mark Bastian
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
- <link rel="stylesheet" type="text/css" href=nil>
-<script>
-window.klipse_settings = null;
-</script>
-<script src=nil></script> 
+
 
 </body>
 </html>

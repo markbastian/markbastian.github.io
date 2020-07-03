@@ -3,36 +3,31 @@
 <head>
     <meta charset="utf-8"/>
     <title>(conj community thoughts): Quil, Clojure, and WORA</title>
-    <link rel="canonical" href="https://markbastian.github.io/posts-output/2015-07-14-quilwora/">
+    
+<meta name="keywords" content="seq,scala,quil,clojure,differential equations,iterate,sequences,java,math,laziness,functional programming,mazes,concurrency,numerical analysis,juxt,clojurescript,conway,defmacro">
+
+<meta name="description" content="IntroductionSince my last post, I&#39;ve been playing with the excellent Quil library, a &quot;Clojure/ClojureScript library for creating interactive drawings and animations.&quot; Prior to this, I was writing demonstrations using the following scheme:">
+
+<meta property="og:description" content="IntroductionSince my last post, I&#39;ve been playing with the excellent Quil library, a &quot;Clojure/ClojureScript library for creating interactive drawings and animations.&quot; Prior to this, I was writing demonstrations using the following scheme:">
+
+<meta property="og:url" content="https://markbastian.github.io/blog/posts-output/2015-07-14-quilwora/" />
+<meta property="og:title" content="Quil, Clojure, and WORA" />
+<meta property="og:type" content="article" />
+
+    <link rel="canonical" href="https://markbastian.github.io/blog/posts-output/2015-07-14-quilwora/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
-          type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700" rel="stylesheet"
+          type="text/css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/default.min.css">
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript" async defer></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="http://platform.linkedin.com/in.js" type="text/javascript" async defer></script>
     <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-    <!--For Google Analytics-->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-89196403-1', 'auto');
-        ga('send', 'pageview');
-    </script>
-    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
-    <link href="/css/tables.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-
 
 <nav class="navbar navbar-default">
     <div class="container">
@@ -43,96 +38,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">(conj community thoughts)</a>
+            <a class="navbar-brand" href="/blog/">(conj community thoughts)</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li ><a href="/">Home</a></li>
+                <li ><a href="/blog/">Home</a></li>
                 <li
-                ><a href="/archives/">Archives</a></li>
+                ><a href="/blog/archives/">Archives</a></li>
                 
                 <li
                 >
-                <a href="/pages-output/about/">About</a>
+                <a href="/blog/pages-output/about/">About</a>
                 </li>
                 
-                <li><a href="/feed.xml">RSS</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        More <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-header">Links</li>
-                        <!--<li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
-                        <!--<li><a href="http://carmenla.me/blog/archives">Carmen's Blog</a></li>-->
-                        
-                        <li><a href="/pages-output/presentations/">Presentations</a></li>
-                        
-                        <li><a href="/pages-output/projects/">Projects</a></li>
-                        
-                        <li><a href="/pages-output/links/">Links</a></li>
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Recent Posts</li>
-                        
-                        <li><a href="/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
-                        
-                        <li><a href="/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
-                        
-                        <li><a href="/posts-output/2016-04-07-tetris/">Another Tetris Clone in Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-12-01-gettingstarted/">Clojure: Getting Started</a></li>
-                        
-                        <li><a href="/posts-output/2015-10-26-concerns/">My Concern with Concerns</a></li>
-                        
-                        <li><a href="/posts-output/2015-09-24-state-mgmt/">Clojure State Management by Example</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-25-snake/">A Clojure Snake Game</a></li>
-                        
-                        <li><a href="/posts-output/2015-08-06-homoiconic/">Clojure is Homoiconic, Java is Not</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-22-three/">Three Reasons You May Not Want to Learn Clojure</a></li>
-                        
-                        <li><a href="/posts-output/2015-07-14-quilwora/">Quil, Clojure, and WORA</a></li>
-                        
-                        
-
-                        
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Tags</li>
-                        
-                        <li><a href="/tags-output/scala/">scala</a></li>
-                        
-                        <li><a href="/tags-output/quil/">quil</a></li>
-                        
-                        <li><a href="/tags-output/clojure/">clojure</a></li>
-                        
-                        <li><a href="/tags-output/differential equations/">differential equations</a></li>
-                        
-                        <li><a href="/tags-output/java/">java</a></li>
-                        
-                        <li><a href="/tags-output/math/">math</a></li>
-                        
-                        <li><a href="/tags-output/functional programming/">functional programming</a></li>
-                        
-                        <li><a href="/tags-output/mazes/">mazes</a></li>
-                        
-                        <li><a href="/tags-output/concurrency/">concurrency</a></li>
-                        
-                        <li><a href="/tags-output/numerical analysis/">numerical analysis</a></li>
-                        
-                        <li><a href="/tags-output/juxt/">juxt</a></li>
-                        
-                        <li><a href="/tags-output/clojurescript/">clojurescript</a></li>
-                        
-                        <li><a href="/tags-output/conway/">conway</a></li>
-                        
-                        <li><a href="/tags-output/defmacro/">defmacro</a></li>
-                        
-                        
-                    </ul>
-                </li>
+                <li><a href="/blog/feed.xml">RSS</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div><!--/.container-fluid -->
@@ -140,10 +59,8 @@
 
 
 <div class="container">
-
-
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-9">
             <div id="content">
                 
 <div id="post">
@@ -155,30 +72,32 @@
     <h2>Quil, Clojure, and WORA</h2>
 </div>
 <div>
-    <ol class="content"><li><a href="#introduction">Introduction</a></li><li><a href="#results">Results</a></li><li><a href="#conclusion">Conclusion</a></li><li><a href="#afterthoughts">Afterthoughts</a></li></ol>
-    <h2 id="introduction">Introduction</h2><p>Since my last post, I've been playing with the excellent <a href='http://quil.info'>Quil library</a>, a "Clojure/ClojureScript library for creating interactive drawings and animations." Prior to this, I was writing demonstrations using the following scheme:</p><ol><li>Develop all logic using cljc files (cljx before Clojure 1.7). In general, application logic is pretty platform-independent and can be wholly or nearly-wholly written in whatever language you are working in (Clojure in our case). Any slight variances (e.g. having to create a java.util.Date or a JavaScript Date) can easily be handled by <a href='https://dev.clojure.org/display/design/Reader+Conditionals'>Clojure's new Reader Conditionals</a>.</li><li>Decide on a UI technology (likely Java Swing with Java2D or HTML Canvas depending on what type of demo I wanted) and implement a front end using that particular choice.</li><li>Optionally implement the "other" solution from #2 so that I now have a Java and JavaScript solution.This strategy works pretty well, but I still have duplication of effort when it comes to the user experience. The awesome thing about Quil is that it allows you to launch your UI as either a Clojure or ClojureScript application targeting the JVM or JavaScript-enabled browser, respectively. Now, I can pretty much write everything as cljc files with a few reader conditionals and easily produce targets that run on the JVM or in a browser.</li></ol><p>To get my feet wet with Quil, I re-implemented the renderer for my <a href='../2015-06-24-lander/'>Lunar Lander project</a> in Quil. I was so happy with the results that I removed the Canvas/ClojureScript renderer completely and now just use a single renderer for both the JVM and JS versions of the project.</p><h2 id="results">Results</h2><p>By the time I was done with my new rendering code and refactoring of everything else, all of the cljs files were gone. I now have a single clj file that is nothing more than a (:gen-class) macro and a main function calling the application entry point in the cljc code. Everything else is written as cljc files. Only a small number of reader conditionals were used to make any Clojure or ClojureScript specific changes as required. Rather than go over every example of how I used reader conditionals, take a look at <a href='https://github.com/markbastian/lander/blob/master/src/cljc/lander/game_launcher.cljc'>this file</a> that demonstrates how to create a single Quil "Sketch" that works with both host platforms. Aside from the above linked file, the only other conditionals required were a couple java.util.Date vs. JavaScript Date conditionals used in the simulation namespace. The vast majority of the code was identical for all hosts.</p><h2 id="conclusion">Conclusion</h2><p>I've been developing code for the JVM for over 10 years and have always liked the "Write once, run anywhere" (WORA) aspect of JVM languages, and have found that WORA works for the most part. However, you can't always rely on your host machine having a modern JVM, especially in the era of mobile devices. The browser is really the most ubiquitous host platform, and the ability to write a single application that can be compiled to run as a JVM app or a JavaScript app with very little effort is a huge advantage for Clojure and Clojurists.</p><h2 id="afterthoughts">Afterthoughts</h2><p>The complete application described in this blog can be found <a href='https://github.com/markbastian/lander'>here</a>. Note that you will need to build and install my <a href='https://github.com/markbastian/numerics'>numerics</a> project as well. Once numerics is installed, cd over to lander and type lein run for the Clojure version of the game. You can play the web version right here (Note that you will need a keyboard or some way to emulate the 'f' key and left and right arrow keys.).</p><p><div class="container"> <canvas height="400" id="quil-lander-canvas" style="border: 1px solid #000000;" width="400"></canvas> <script src="../../js/quil-lander.js"></script> <script type="text/javascript">lander.game_launcher.launch(document.getElementById("quil-lander-canvas"), 400, 400);</script> </div></p><p>Note that due to the way markdown munges underscores I needed to update the js file used for this demo. The new file  includes some additional features such as a fuel budget. Good luck!</p>
+    
+    <h2>Introduction</h2><p>Since my last post, I've been playing with the excellent <a href="http://quil.info">Quil library</a>, a "Clojure/ClojureScript library for creating interactive drawings and animations." Prior to this, I was writing demonstrations using the following scheme:</p><ol><li>Develop all logic using cljc files (cljx before Clojure 1.7). In general, application logic is pretty platform-independent and can be wholly or nearly-wholly written in whatever language you are working in (Clojure in our case). Any slight variances (e.g. having to create a java.util.Date or a JavaScript Date) can easily be handled by <a href="https://dev.clojure.org/display/design/Reader+Conditionals">Clojure's new Reader Conditionals</a>.</li><li>Decide on a UI technology (likely Java Swing with Java2D or HTML Canvas depending on what type of demo I wanted) and implement a front end using that particular choice.</li><li>Optionally implement the "other" solution from #2 so that I now have a Java and JavaScript solution.
+This strategy works pretty well, but I still have duplication of effort when it comes to the user experience. The awesome thing about Quil is that it allows you to launch your UI as either a Clojure or ClojureScript application targeting the JVM or JavaScript-enabled browser, respectively. Now, I can pretty much write everything as cljc files with a few reader conditionals and easily produce targets that run on the JVM or in a browser.</li></ol><p>To get my feet wet with Quil, I re-implemented the renderer for my <a href="../2015-06-24-lander/">Lunar Lander project</a> in Quil. I was so happy with the results that I removed the Canvas/ClojureScript renderer completely and now just use a single renderer for both the JVM and JS versions of the project.</p><h2>Results</h2><p>By the time I was done with my new rendering code and refactoring of everything else, all of the cljs files were gone. I now have a single clj file that is nothing more than a (:gen-class) macro and a main function calling the application entry point in the cljc code. Everything else is written as cljc files. Only a small number of reader conditionals were used to make any Clojure or ClojureScript specific changes as required. Rather than go over every example of how I used reader conditionals, take a look at <a href="https://github.com/markbastian/lander/blob/master/src/cljc/lander/game_launcher.cljc">this file</a> that demonstrates how to create a single Quil "Sketch" that works with both host platforms. Aside from the above linked file, the only other conditionals required were a couple java.util.Date vs. JavaScript Date conditionals used in the simulation namespace. The vast majority of the code was identical for all hosts.</p><h2>Conclusion</h2><p>I've been developing code for the JVM for over 10 years and have always liked the "Write once, run anywhere" (WORA) aspect of JVM languages, and have found that WORA works for the most part. However, you can't always rely on your host machine having a modern JVM, especially in the era of mobile devices. The browser is really the most ubiquitous host platform, and the ability to write a single application that can be compiled to run as a JVM app or a JavaScript app with very little effort is a huge advantage for Clojure and Clojurists.</p><h2>Afterthoughts</h2><p>The complete application described in this blog can be found <a href="https://github.com/markbastian/lander">here</a>. Note that you will need to build and install my <a href="https://github.com/markbastian/numerics">numerics</a> project as well. Once numerics is installed, cd over to lander and type lein run for the Clojure version of the game. You can play the web version right here (Note that you will need a keyboard or some way to emulate the 'f' key and left and right arrow keys.).</p><div class="container"><canvas height="400" id="quil-lander-canvas" style="border: 1px solid #000000;" width="400"></canvas><script src="../../js/quil-lander.js"></script><script type="text/javascript">lander.game_launcher.launch(document.getElementById("quil-lander-canvas"), 400, 400);</script></div><p>Note that due to the way markdown munges underscores I needed to update the js file used for this demo. The new file
+includes some additional features such as a fuel budget. Good luck!</p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/tags-output/quil/">quil</a>
+    <a href="/blog/tags-output/quil/">quil</a>
     
-    <a href="/tags-output/clojure/">clojure</a>
+    <a href="/blog/tags-output/clojure/">clojure</a>
     
-    <a href="/tags-output/functional programming/">functional programming</a>
+    <a href="/blog/tags-output/functional programming/">functional programming</a>
     
-    <a href="/tags-output/clojurescript/">clojurescript</a>
+    <a href="/blog/tags-output/clojurescript/">clojurescript</a>
     
 </div>
 
 
     <div id="prev-next">
         
-        <a href="/posts-output/2015-07-22-three/">&laquo; Three Reasons You May Not Want to Learn Clojure</a>
+        <a href="/blog/posts-output/2015-07-22-three/">&laquo; Three Reasons You May Not Want to Learn Clojure</a>
         
         
-        <a class="right" href="/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure &raquo;</a>
+        <a class="right" href="/blog/posts-output/2015-06-24-lander/">A Lunar Lander Game in Clojure &raquo;</a>
         
     </div>
 
@@ -186,7 +105,7 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_config = function () {
-            this.page.url = "https://markbastian.github.io/posts-output/2015-07-14-quilwora/";
+            this.page.url = "https://markbastian.github.io/blog/posts-output/2015-07-14-quilwora/";
             this.page.identifier = "Quil, Clojure, and WORA";
         };
         (function() {
@@ -202,21 +121,94 @@
 
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <h3>Links</h3>
+                <ul id="links">
+<!--                    <li><a href="http://cryogenweb.org/docs/home.html">Cryogen Docs</a></li>-->
+<!--                    <li><a href="https://carmen.la/blog/archives/">Carmen's Blog</a></li>-->
+                    
+                    <li><a href="/blog/pages-output/presentations/">Presentations</a></li>
+                    
+                    <li><a href="/blog/pages-output/projects/">Projects</a></li>
+                    
+                    <li><a href="/blog/pages-output/links/">Links</a></li>
+                    
+                </ul>
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2020-07-03-the-joy-of-seqs/">Clojure and The Joy of Seqs</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-07-10-polymacro/">A Polynomial Macro</a></li>
+                        
+                        <li><a href="/blog/posts-output/2017-06-19-clojure-rising/">Clojure Rising</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/seq/">seq</a></li>
+                        
+                        <li><a href="/blog/tags-output/scala/">scala</a></li>
+                        
+                        <li><a href="/blog/tags-output/quil/">quil</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojure/">clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/differential equations/">differential equations</a></li>
+                        
+                        <li><a href="/blog/tags-output/iterate/">iterate</a></li>
+                        
+                        <li><a href="/blog/tags-output/sequences/">sequences</a></li>
+                        
+                        <li><a href="/blog/tags-output/java/">java</a></li>
+                        
+                        <li><a href="/blog/tags-output/math/">math</a></li>
+                        
+                        <li><a href="/blog/tags-output/laziness/">laziness</a></li>
+                        
+                        <li><a href="/blog/tags-output/functional programming/">functional programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/mazes/">mazes</a></li>
+                        
+                        <li><a href="/blog/tags-output/concurrency/">concurrency</a></li>
+                        
+                        <li><a href="/blog/tags-output/numerical analysis/">numerical analysis</a></li>
+                        
+                        <li><a href="/blog/tags-output/juxt/">juxt</a></li>
+                        
+                        <li><a href="/blog/tags-output/clojurescript/">clojurescript</a></li>
+                        
+                        <li><a href="/blog/tags-output/conway/">conway</a></li>
+                        
+                        <li><a href="/blog/tags-output/defmacro/">defmacro</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <h3>Social</h3>
+                <p><a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="true">Follow @mark_bastian</a></p>
+                <p><a class="github-button" href="https://github.com/markbastian" data-size="large" data-show-count="true" aria-label="Follow @markbastian on GitHub">Follow @markbastian</a></p>
+                <p><script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script></p>
+            </div>
+        </div>
     </div>
-    <footer>Copyright &copy; 2018 Mark Bastian
-        <a href="http://twitter.com/mark_bastian" class="twitter-follow-button" data-show-count="false">Follow @mark_bastian</a>
-        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/mark-bastian-295553102" data-format="click" data-related="false" data-text="Mark Bastian"></script>
+    <footer>Copyright &copy; 2020 Mark Bastian
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
- <link rel="stylesheet" type="text/css" href=nil>
-<script>
-window.klipse_settings = null;
-</script>
-<script src=nil></script> 
+
 
 </body>
 </html>
