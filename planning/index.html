@@ -5,6 +5,14 @@
     <title>Planning Demo</title>
 </head>
 <body>
+
+<script>
+    function preventBehavior(e) {
+        e.preventDefault();
+    }
+    document.addEventListener("touchmove", preventBehavior, {passive: false});
+</script>
+
 <div id="ui-root"></div>
 <script src="js/main.js"></script>
 </body>
